@@ -1,0 +1,59 @@
+{
+  "name": "scurte",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "standard && tap test/**/*.test.js",
+    "start": "fastify start -l info app.js",
+    "dev": "npm run build && fastify start -w -l info -P app.js",
+    "build": "rollup -c"
+  },
+  "keywords": [],
+  "author": "Tomas Della Vedova",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delvedor/scurte.git"
+  },
+  "bugs": {
+    "url": "https://github.com/delvedor/scurte/issues"
+  },
+  "homepage": "https://github.com/delvedor/scurte#readme",
+  "dependencies": {
+    "@beyonk/svelte-notifications": "^3.1.0",
+    "@elastic/elasticsearch": "^7.10.0",
+    "desm": "^1.1.0",
+    "fastify": "^3.9.2",
+    "fastify-autoload": "^3.4.0",
+    "fastify-cli": "^2.6.0",
+    "fastify-csrf": "^3.0.0",
+    "fastify-env": "^2.1.0",
+    "fastify-oauth2": "^4.2.1",
+    "fastify-piscina": "^3.0.0",
+    "fastify-plugin": "^3.0.0",
+    "fastify-secure-session": "^2.3.0",
+    "fastify-sensible": "^3.1.0",
+    "fastify-static": "^3.3.0",
+    "fluent-json-schema": "^2.0.3",
+    "svelte": "^3.31.0",
+    "undici": "^3.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup": "^2.35.1",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^7.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "standard": "^16.0.3",
+    "svelte-spa-router": "^3.1.0",
+    "tap": "^14.11.0"
+  }
+}
