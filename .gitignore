@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+.DS_Store
+
+plugins/authorization/secret.key
+public/build
