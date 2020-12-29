@@ -22,8 +22,12 @@ export default async function admin (fastify, opts) {
     const token = await this.github.getAccessTokenFromAuthorizationCodeFlow(req)
     await isUserAllowed(token.access_token)
 
-    req.session.set('session', { token: token.access_token })
-    req.session.options({
+    reply.setCookie('user_session', token.access_token, {
+      secure: this.config.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: true,
+      path: '/_scurte',
+      signed: true,
       maxAge: 604800, // one week in seconds
       expires: new Date(Date.now() + 604800 * 1000)
     })

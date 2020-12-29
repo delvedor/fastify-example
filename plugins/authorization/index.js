@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs'
+/* eslint camelcase: 0 */
+
 import fp from 'fastify-plugin'
-import { join } from 'desm'
 import OAuth from 'fastify-oauth2'
-import SecureSession from 'fastify-secure-session'
+import Cookie from 'fastify-cookie'
 import Csrf from 'fastify-csrf'
 import undici from 'undici'
 
@@ -12,51 +12,47 @@ async function authorization (fastify, opts) {
 
   const client = undici('https://api.github.com')
 
-  fastify.register(OAuth, {
-    name: 'github',
-    credentials: {
-      client: {
-        id: config.GITHUB_APP_ID,
-        secret: config.GITHUB_APP_SECRET
+  fastify
+    .register(OAuth, {
+      name: 'github',
+      credentials: {
+        client: {
+          id: config.GITHUB_APP_ID,
+          secret: config.GITHUB_APP_SECRET
+        },
+        auth: OAuth.GITHUB_CONFIGURATION
       },
-      auth: OAuth.GITHUB_CONFIGURATION
-    },
-    startRedirectPath: '/_scurte/login/github',
-    callbackUri: 'http://localhost:3000/_scurte/login/github/callback',
-    scope: ['user:email']
-  })
-
-  fastify.register(SecureSession, {
-    cookieName: 'scurte-session',
-    key: readFileSync(join(import.meta.url, 'secret.key')),
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: true,
-      path: '/_scurte'
-    }
-  })
-
-  fastify.register(Csrf, {
-    sessionPlugin: 'fastify-secure-session'
-  })
-
-  fastify.decorate('authorize', authorize)
-  fastify.decorate('isUserAllowed', isUserAllowed)
-  fastify.decorateRequest('user', null)
+      startRedirectPath: '/_scurte/login/github',
+      callbackUri: 'http://localhost:3000/_scurte/login/github/callback',
+      scope: ['user:email']
+    })
+    .register(Cookie, {
+      secret: config.COOKIE_SECRET
+    })
+    .register(Csrf, {
+      sessionPlugin: 'fastify-cookie',
+      cookieOpts: { signed: true }
+    })
+    .decorate('authorize', authorize)
+    .decorate('isUserAllowed', isUserAllowed)
+    .decorateRequest('user', null)
 
   async function authorize (req, reply) {
-    const session = req.session.get('session')
-    if (session === undefined) {
-      req.log.debug('The session cookie is not present')
-      throw httpErrors.unauthorized('The session cookie is not present')
+    const { user_session } = req.cookies
+    if (!user_session) {
+      throw httpErrors.unauthorized('Missing session cookie')
+    }
+
+    const cookie = req.unsignCookie(user_session)
+    if (!cookie.valid) {
+      throw httpErrors.unauthorized('Invalid cookie signature')
     }
 
     let mail
     try {
-      mail = await isUserAllowed(session.token)
+      mail = await isUserAllowed(cookie.value)
     } catch (err) {
-      req.session.delete()
+      reply.clearCookie('user_session', { path: '/_scurte' })
       throw err
     }
     req.user = { mail }
