@@ -17,9 +17,14 @@ async function elasticsearch (fastify, opts) {
   fastify
     .decorate('elastic', client)
     .decorate('indices', indices)
+    .decorate('base64', base64)
     .addHook('onClose', (instance, done) => {
       instance.elastic.close(done)
     })
+
+  function base64 (str) {
+    return Buffer.from(str).toString('base64')
+  }
 }
 
 async function configureIndices (client, indices) {
@@ -30,11 +35,17 @@ async function configureIndices (client, indices) {
       body: {
         mappings: {
           properties: {
-            source: { type: 'text' },
+            source: {
+              type: 'text',
+              fields: {
+                raw: { type: 'keyword' }
+              }
+            },
             destination: { type: 'text' },
             isPrivate: { type: 'boolean' },
             count: { type: 'integer' },
-            user: { type: 'keyword' }
+            user: { type: 'keyword' },
+            created: { type: 'date' }
           }
         }
       }
