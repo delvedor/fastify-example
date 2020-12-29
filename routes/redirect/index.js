@@ -2,7 +2,11 @@ import Piscina from 'fastify-piscina'
 import { join } from 'desm'
 
 export default async function short (fastify, opts) {
-  const { elastic, indices } = fastify
+  const {
+    elastic,
+    indices,
+    base64
+  } = fastify
 
   fastify.register(Piscina, {
     filename: join(import.meta.url, 'worker.cjs')
@@ -46,6 +50,17 @@ export default async function short (fastify, opts) {
         ? reply.suggest(suggestions)
         : reply.noMatches()
     }
+
+    await elastic.update({
+      index: indices.SHORTURL,
+      id: base64(firstMatch.source),
+      body: {
+        script: {
+          lang: 'painless',
+          source: 'ctx._source.count += 1'
+        }
+      }
+    })
 
     return reply.redirect(firstMatch.destination)
   }

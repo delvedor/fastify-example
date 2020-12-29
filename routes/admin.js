@@ -9,7 +9,8 @@ export default async function admin (fastify, opts) {
     isValidUrl,
     isUserAllowed,
     authorize,
-    csrfProtection
+    csrfProtection,
+    base64
   } = fastify
 
   fastify.route({
@@ -76,11 +77,12 @@ export default async function admin (fastify, opts) {
       throw httpErrors.badRequest('The destination is not a valid url')
     }
 
+    const created = new Date()
     const { statusCode } = await elastic.create({
       index: indices.SHORTURL,
       id: base64(source),
       refresh: 'wait_for',
-      body: { source, destination, isPrivate, count: 0, user: req.user.mail }
+      body: { source, destination, isPrivate, created, count: 0, user: req.user.mail }
     }, { ignore: [409] })
 
     if (statusCode === 409) {
@@ -178,6 +180,8 @@ export default async function admin (fastify, opts) {
               .prop('source', S.string())
               .prop('destination', S.string())
               .prop('isPrivate', S.boolean())
+              .prop('count', S.integer())
+              .prop('created', S.string())
           ))
       }
     },
@@ -193,7 +197,8 @@ export default async function admin (fastify, opts) {
         size,
         query: {
           term: { user: req.user.mail }
-        }
+        },
+        sort: 'source.raw'
       }
     })
 
@@ -211,9 +216,5 @@ export default async function admin (fastify, opts) {
     if (source.split('/')[0] === '_scurte') {
       throw httpErrors.badRequest('The source cannot contain the private string "_scurte"')
     }
-  }
-
-  function base64 (str) {
-    return Buffer.from(str).toString('base64')
   }
 }
