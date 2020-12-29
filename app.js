@@ -1,6 +1,5 @@
 import AutoLoad from 'fastify-autoload'
 import Sensible from 'fastify-sensible'
-import Static from 'fastify-static'
 import Env from 'fastify-env'
 import S from 'fluent-json-schema'
 import { join } from 'desm'
@@ -19,11 +18,6 @@ export default async function (fastify, opts) {
   })
 
   fastify.register(Sensible)
-
-  fastify.register(Static, {
-    root: join(import.meta.url, 'public'),
-    prefix: '/_scurte/public'
-  })
 
   fastify.register(AutoLoad, {
     dir: join(import.meta.url, 'plugins'),
