@@ -23,6 +23,10 @@ export default async function short (fastify, opts) {
 
   async function onGetUrl (req, reply) {
     const source = req.params['*']
+    if (source === '') {
+      return reply.redirect('https://github.com/delvedor/scurte')
+    }
+
     const { body: result } = await elastic.search({
       index: indices.SHORTURL,
       body: {
