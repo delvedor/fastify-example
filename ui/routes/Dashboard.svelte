@@ -4,6 +4,10 @@
   import Redirect from '../components/Redirect.svelte'
   import { session } from '../store.js'
 
+  const sizeResults = 10
+  let pageSize = 1
+  let pageTotal = 1
+  let fromResults = 0
   let redirects = []
   let count = 0
   let source = ''
@@ -52,8 +56,11 @@
     await loadRedirects()
   }
 
-  async function loadRedirects () {
-    const response = await fetch('/_scurte/redirects', {
+  async function loadRedirects (from = 0) {
+    if (from < 0) return
+    if (from >= pageTotal) return
+    fromResults = from
+    const response = await fetch(`/_scurte/redirects?from=${from}&size=${sizeResults}`, {
       method: 'GET',
       credentials: 'include',
       headers: { 'X-Csrf-Token': $session.csrf }
@@ -63,6 +70,8 @@
       const body = await response.json()
       redirects = body.redirects
       count = body.count
+      pageSize = Math.ceil(sizeResults / count)
+      pageTotal = Math.floor(count / pageSize)
     } else if (response.status === 401 || response.status === 403) {
       $session = null
     } else {
@@ -99,7 +108,7 @@
       </div>
       <div class="column">
         <label class="checkbox">
-          <input type="checkbox" bind:value={canBeSuggested}>
+          <input type="checkbox" bind:checked={canBeSuggested}>
           Can be suggested?
         </label>
       </div>
@@ -112,12 +121,23 @@
       </div>
     </div>
 
-    <h4 class="title is-4 has-text-left	fullwidth mt-6 mb-0">Current redirects ({count})</h4>
+    <div class="columns fullwidth mt-6 mb-0">
+      <div class="column">
+        <h4 class="title is-4 has-text-left	fullwidth">Current redirects ({count})</h4>
+      </div>
+      <div class="column has-text-right">
+        <button class="pagination-button" on:click={() => loadRedirects(fromResults - pageSize)}><ion-icon name="chevron-back"></ion-icon></button>
+        {fromResults + 1}/{pageTotal}
+        <button class="pagination-button" on:click={() => loadRedirects(fromResults + pageSize)}><ion-icon name="chevron-forward"></ion-icon></button>
+      </div>
+    </div>
     {#each redirects as redirect}
       <Redirect
         source={redirect.source}
         destination={redirect.destination}
         canBeSuggested={!redirect.isPrivate}
+        count={redirect.count}
+        created={redirect.created}
         on:change={onChange}
       />
     {/each}
@@ -147,5 +167,10 @@
   ion-icon {
     position: relative;
     top: 1px;
+  }
+
+  .pagination-button {
+    border: none;
+    background: #fff;
   }
 </style>
