@@ -83,10 +83,10 @@
   onMount(loadRedirects)
 </script>
 
-<main class="gradient-background is-flex is-justify-content-center is-align-items-center">
+<main class="gradient-background">
   <NotificationDisplay />
-  <div class="dashboard-box is-flex is-flex-direction-column is-justify-content-space-around is-align-items-center">
-    <h1 class="gradient-text title is-1">Scurte</h1>
+  <div class="dashboard-box">
+    <h1 class="gradient-text title is-1 is-uppercase has-text-weight-bold has-text-centered">Scurte</h1>
 
     <h4 class="title is-4 has-text-left	fullwidth">Add a new shorturl</h4>
     <div class="columns fullwidth">
@@ -149,7 +149,7 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 30px;
   }
 
   .fullwidth {
@@ -159,14 +159,17 @@
   .dashboard-box {
     background-color: #fff;
     border-radius: 10px;
-    padding: 30px;
-    width: 90%;
-    margin: 50px;
+    padding: 50px;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    margin: 0 auto;
   }
 
   ion-icon {
     position: relative;
     top: 1px;
+    margin-right: 10px;
   }
 
   .pagination-button {

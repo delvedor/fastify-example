@@ -1,7 +1,7 @@
 <main class="gradient-background is-flex is-justify-content-center is-align-items-center">
   <div class="login-box is-flex is-flex-direction-column is-justify-content-space-around is-align-items-center">
-    <h1 class="gradient-text title is-1">Scurte</h1>
-    <a class="login-button is-size-4" href="/_scurte/login/github"><ion-icon name="logo-github"></ion-icon> Login with GitHub</a>
+    <h1 class="gradient-text title is-1 is-uppercase has-text-weight-bold has-text-centered">Scurte</h1>
+    <a class="login-button is-size-5" href="/_scurte/login/github"><ion-icon name="logo-github"></ion-icon> Login with GitHub</a>
   </div>
 </main>
 
