@@ -1,3 +1,4 @@
+import assert from 'assert'
 import fp from 'fastify-plugin'
 import { Client } from '@elastic/elasticsearch'
 
@@ -15,9 +16,21 @@ import { Client } from '@elastic/elasticsearch'
  * thansk to an internal graph structure, provided by https://github.com/fastify/avvio.
  */
 async function elasticsearch (fastify, opts) {
+  const {
+    ELASTIC_CLOUD_ID,
+    ELASTIC_ADDRESS,
+    ELASTIC_API_KEY
+  } = fastify.config
+
+  assert(
+    ELASTIC_CLOUD_ID || ELASTIC_ADDRESS,
+    'You should confiigure either ELASTIC_CLOUD_ID or ELASTIC_ADDRESS'
+  )
+
   const client = new Client({
-    cloud: { id: fastify.config.ELASTIC_CLOUD_ID },
-    auth: { apiKey: fastify.config.ELASTIC_API_KEY }
+    ...(ELASTIC_CLOUD_ID && { cloud: { id: ELASTIC_CLOUD_ID } }),
+    ...(ELASTIC_ADDRESS && { node: ELASTIC_ADDRESS }),
+    auth: { apiKey: ELASTIC_API_KEY }
   })
 
   const indices = {

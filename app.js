@@ -21,7 +21,8 @@ export default async function (fastify, opts) {
   fastify.register(Env, {
     schema: S.object()
       .prop('NODE_ENV', S.string().required())
-      .prop('ELASTIC_CLOUD_ID', S.string().required())
+      .prop('ELASTIC_CLOUD_ID', S.string())
+      .prop('ELASTIC_ADDRESS', S.string())
       .prop('ELASTIC_API_KEY', S.string().required())
       .prop('GITHUB_APP_ID', S.string().required())
       .prop('GITHUB_APP_SECRET', S.string().required())

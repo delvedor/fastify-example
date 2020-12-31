@@ -7,7 +7,7 @@ export const autoPrefix = '/_scurte'
 /**
  * This plugin contains all the code needed to serve the frontend of
  * the application, it registers additional plugins to handle
- * static file serving and heelmet security headers.
+ * static file serving and helmet security headers.
  * As you saw in the Elasticsearch plugin, a good rule of thumb is that
  * every plugin should be self-contained, reason why we are registering
  * the two additonal plugins here and not in the global plugins folder.
