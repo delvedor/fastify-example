@@ -12,7 +12,8 @@
     "test": "standard && tap test/**/*.test.js",
     "start": "fastify start -l info app.js",
     "dev": "npm run build && fastify start -w -l info -P app.js",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "elasticsearch": "./scripts/elasticsearch.sh"
   },
   "keywords": [],
   "author": "Tomas Della Vedova",
