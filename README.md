@@ -11,6 +11,7 @@ You you can read the project in any order, but I would recommend the following:
 
 1. `plugins/authorization/index.js`
 1. `plugins/elasticsearch.js`
+1. `plugins/rate-limit.js`
 1. `plugins/validUrl.js`
 1. `routes/status.js`
 1. `routes/frontend.js`

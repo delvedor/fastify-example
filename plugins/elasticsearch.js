@@ -9,11 +9,11 @@ import { Client } from '@elastic/elasticsearch'
  * As you will see, inside this plugin we are not only exposing the
  * Elasticsearch instance, but also initializing the necessary indices.
  *
- * A rule of thumb to follow is that every plugin should be self-contained,
+ * Protip: A rule of thumb to follow is that every plugin should be self-contained,
  * and initialize all of its resources before telling to Fastify that is ready to go.
  * By design, Fastify won't start listeing to incoming requests if all the registered
  * plugins have finished their loading. Fastify guarantees the loading order
- * thansk to an internal graph structure, provided by https://github.com/fastify/avvio.
+ * thanks to an internal graph structure, provided by https://github.com/fastify/avvio.
  */
 async function elasticsearch (fastify, opts) {
   const {
@@ -34,7 +34,13 @@ async function elasticsearch (fastify, opts) {
   })
 
   const indices = {
-    SHORTURL: 'scurte-shortened-url'
+    SHORTURL: 'scurte-shortened-url',
+    // The rate limit index contains all the ip addresses the users that
+    // sed a request to the application. Given that this index can grown
+    // in size very quickly, a god approach would be to create a new index daily
+    // and configure Elasticsearch to delete the old ones with an ILM policy.
+    // See https://www.elastic.co/guide/en/elasticsearch/reference/current/index-lifecycle-management.html
+    RATELIMIT: 'scurte-rate-limit'
   }
 
   // We ping the cluster before telling to Fastfy
@@ -55,10 +61,6 @@ async function elasticsearch (fastify, opts) {
   // need to update the entire application.
   fastify.decorate('indices', indices)
 
-  // Small utilty that we use for generating
-  // the ids of our documents in Elasticsearch.
-  fastify.decorate('base64', base64)
-
   // Often, you need to disconnect from an external service
   // when you are shutting down the application, this
   // can be done via the `onClose` hook.
@@ -66,10 +68,6 @@ async function elasticsearch (fastify, opts) {
   fastify.addHook('onClose', (instance, done) => {
     instance.elastic.close(done)
   })
-
-  function base64 (str) {
-    return Buffer.from(str).toString('base64')
-  }
 }
 
 /**
@@ -78,8 +76,8 @@ async function elasticsearch (fastify, opts) {
  * creates it if it doesn't.
  */
 async function configureIndices (client, indices) {
-  const { body: exists } = await client.indices.exists({ index: indices.SHORTURL })
-  if (!exists) {
+  let result = await client.indices.exists({ index: indices.SHORTURL })
+  if (!result.body) {
     await client.indices.create({
       index: indices.SHORTURL,
       body: {
@@ -105,6 +103,21 @@ async function configureIndices (client, indices) {
             user: { type: 'keyword' },
             // creation timestamp
             created: { type: 'date' }
+          }
+        }
+      }
+    })
+  }
+
+  result = await client.indices.exists({ index: indices.RATELIMIT })
+  if (!result.body) {
+    await client.indices.create({
+      index: indices.RATELIMIT,
+      body: {
+        mappings: {
+          properties: {
+            current: { type: 'integer' },
+            ttl: { type: 'date' }
           }
         }
       }

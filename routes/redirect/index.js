@@ -16,8 +16,7 @@ import { join } from 'desm'
 export default async function short (fastify, opts) {
   const {
     elastic,
-    indices,
-    base64
+    indices
   } = fastify
 
   // Server side rendering has a rather big issue in Node.js.
@@ -85,7 +84,7 @@ export default async function short (fastify, opts) {
     // let's update the click count!
     await elastic.update({
       index: indices.SHORTURL,
-      id: base64(firstMatch.source),
+      id: firstMatch.source,
       body: {
         script: {
           lang: 'painless',

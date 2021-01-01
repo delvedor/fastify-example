@@ -58,6 +58,7 @@ async function authorization (fastify, opts) {
   // When using the `decorate` API, the first parameter is the decorator name,
   // while the second the actual decorator (it can be any js value).
   // You can then access your decorator with `fastify.nameOfTheDecorator`.
+  // See https://www.fastify.io/docs/latest/Decorators/
   fastify.decorate('authorize', authorize)
   fastify.decorate('isUserAllowed', isUserAllowed)
   // `decorateRequest` works in the same way of `decorate`, but it changes
@@ -72,8 +73,11 @@ async function authorization (fastify, opts) {
   // By exposing the authorization function with the hook signature, we can
   // use it everywhere in our application by adding a plugin level hook that
   // uses it or a route level hook.
+  // One of the unwritten core principles with Fastify is "keep things boring",
+  // it will help you keep the complexity low, scale well in heterogeneous teams
+  // and lower the barrier of entry.
   //
-  // The authorization hook will look at the cookies adn extract the session
+  // The authorization hook will look at the cookies and extract the session
   // cookie, in this case `user_session`, if not present, throw an error
   // with `httpErrors.unauthorized` an utility added by `fastify-sensible`.
   // If the cookie is present it will try too unsign it and finally
@@ -96,9 +100,16 @@ async function authorization (fastify, opts) {
     try {
       mail = await isUserAllowed(cookie.value)
     } catch (err) {
+      // Let's clear the cookie as well in case of errors,
+      // in this way if a user retries the request we'll save
+      // an additional http request to GitHub.
       reply.clearCookie('user_session', { path: '/_scurte' })
       throw err
     }
+
+    // You can add any property to the request/reply objects,
+    // but it's important you declare them in advance with decorators.
+    // If you don't, your code will likely be deoptimized by V8.
     req.user = { mail }
   }
 

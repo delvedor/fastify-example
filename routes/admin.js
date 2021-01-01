@@ -15,8 +15,7 @@ export default async function admin (fastify, opts) {
     indices,
     isValidUrl,
     authorize,
-    csrfProtection,
-    base64
+    csrfProtection
   } = fastify
 
   // Every route inside this plugin should be protected
@@ -52,6 +51,19 @@ export default async function admin (fastify, opts) {
   fastify.route({
     method: 'PUT',
     path: '/redirect',
+    // We don't need to rate limit most of the admin APIs,
+    // as those are already protected by authentication.
+    // You can also choose to have a specific rate limit configuration
+    // on a per-route basis, for example:
+    // ```js
+    // config: {
+    //   rateLimit: {
+    //     max: 100,
+    //     timeWindow: '1 minute'
+    //   }
+    // }
+    // ```
+    config: { rateLimit: false },
     // This route should be protected also against CSRF attacks,
     // so we add an additional hook, `csrfProtection`, which is provided
     // by `fastify-csrf`, to check the CSRF secret and token.
@@ -88,7 +100,7 @@ export default async function admin (fastify, opts) {
 
     const { statusCode } = await elastic.create({
       index: indices.SHORTURL,
-      id: base64(source),
+      id: source,
       refresh: 'wait_for',
       body: {
         source,
@@ -123,6 +135,7 @@ export default async function admin (fastify, opts) {
   fastify.route({
     method: 'POST',
     path: '/redirect',
+    config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
       body: S.object()
@@ -146,7 +159,7 @@ export default async function admin (fastify, opts) {
 
     const { statusCode } = await elastic.update({
       index: indices.SHORTURL,
-      id: base64(source),
+      id: source,
       refresh: 'wait_for',
       body: {
         doc: { source, destination, isPrivate }
@@ -165,6 +178,7 @@ export default async function admin (fastify, opts) {
   fastify.route({
     method: 'DELETE',
     path: '/redirect',
+    config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
       body: S.object().prop('source', S.string().required()),
@@ -181,7 +195,7 @@ export default async function admin (fastify, opts) {
 
     const { statusCode } = await elastic.delete({
       index: indices.SHORTURL,
-      id: base64(source),
+      id: source,
       refresh: 'wait_for'
     }, { ignore: [404] })
 
@@ -196,6 +210,7 @@ export default async function admin (fastify, opts) {
   fastify.route({
     method: 'GET',
     path: '/redirects',
+    config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
       // Note that the schema describes how the object will look
