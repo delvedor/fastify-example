@@ -24,7 +24,7 @@
   }
 
   onMount(async () => {
-    const response = await fetch('/_scurte/refresh', { method: 'GET', credentials: 'include' })
+    const response = await fetch('/_app/refresh', { method: 'GET', credentials: 'include' })
     if (response.status === 200) {
       const body = await response.json()
       $session = { csrf: body.csrfToken }
@@ -42,7 +42,7 @@
 </script>
 
 <svelte:head>
-  <title>Scurte</title>
+  <title>Fastify URL shortener</title>
 </svelte:head>
 
 {#if loading}

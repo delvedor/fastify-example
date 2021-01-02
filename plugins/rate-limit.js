@@ -5,7 +5,7 @@ import RateLimit from 'fastify-rate-limit'
  * When exposing an application to the public internet, it's a good
  * approach to add a rate limiter to disallow excessive usage.
  * A rate limiter will save resources and based on the configuration
- * help you identify malicious actors.
+ * help you identify malicious users.
  *
  * Usually one of the best suited databases for storing rate limit data
  * is Redis, due to its speed and the simple nature of the store data.
@@ -95,9 +95,10 @@ async function rateLimit (fastify, opts) {
     reply.send(error)
   }
 
+  // Finally register the rate limit plugin
+  // and add the needd configuration.
   fastify.register(RateLimit, {
-    // We don't want to be rate limited in our development environment
-    allowList: ['127.0.0.1'],
+    allowList: ['127.0.0.1'], // no rate limit in our machine
     store: ElasticsearchStore,
     timeWindow: '1 minute',
     max: 10

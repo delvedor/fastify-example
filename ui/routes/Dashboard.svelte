@@ -26,7 +26,7 @@
     }
 
     isCreating = true
-    const response = await fetch('/_scurte/redirect', {
+    const response = await fetch('/_app/redirect', {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -60,7 +60,7 @@
     if (from < 0) return
     if (from >= pageTotal) return
     fromResults = from
-    const response = await fetch(`/_scurte/redirects?from=${from}&size=${sizeResults}`, {
+    const response = await fetch(`/_app/redirects?from=${from}&size=${sizeResults}`, {
       method: 'GET',
       credentials: 'include',
       headers: { 'X-Csrf-Token': $session.csrf }
@@ -86,7 +86,7 @@
 <main class="gradient-background">
   <NotificationDisplay />
   <div class="dashboard-box">
-    <h1 class="gradient-text title is-1 is-uppercase has-text-weight-bold has-text-centered">Scurte</h1>
+    <h1 class="gradient-text title is-1 is-uppercase has-text-weight-bold has-text-centered">Fastify URL shortener</h1>
 
     <h4 class="title is-4 has-text-left	fullwidth">Add a new shorturl</h4>
     <div class="columns fullwidth">

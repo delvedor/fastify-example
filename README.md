@@ -1,6 +1,6 @@
-# scurte
+# Fastify App Example
 
-Scurte is a small but feature complete application build with Fastify and Svelte,
+App is a small but feature complete application build with Fastify and Svelte,
 and it aims to show all the core concepts of Fastify, best  practices, and recommendations.
 
 ## Project structure

@@ -37,7 +37,7 @@ export default async function short (fastify, opts) {
   fastify.decorateReply('suggest', suggest)
 
   // catch all route to handle the redirects
-  // the only reserved route is `/_scurte`
+  // the only reserved route is `/_app`
   fastify.route({
     method: 'GET',
     path: '/*',

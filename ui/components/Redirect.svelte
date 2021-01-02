@@ -27,7 +27,7 @@
     }
 
     isUpdating = true
-    const response = await fetch('/_scurte/redirect', {
+    const response = await fetch('/_app/redirect', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -64,7 +64,7 @@
     }
 
     isDeleting = true
-    const response = await fetch('/_scurte/redirect', {
+    const response = await fetch('/_app/redirect', {
       method: 'DELETE',
       credentials: 'include',
       headers: {

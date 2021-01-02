@@ -36,8 +36,8 @@ async function authorization (fastify, opts) {
       },
       auth: OAuth.GITHUB_CONFIGURATION
     },
-    startRedirectPath: '/_scurte/login/github',
-    callbackUri: 'http://localhost:3000/_scurte/login/github/callback',
+    startRedirectPath: '/_app/login/github',
+    callbackUri: 'http://localhost:3000/_app/login/github/callback',
     scope: ['user:email']
   })
 
@@ -103,7 +103,7 @@ async function authorization (fastify, opts) {
       // Let's clear the cookie as well in case of errors,
       // in this way if a user retries the request we'll save
       // an additional http request to GitHub.
-      reply.clearCookie('user_session', { path: '/_scurte' })
+      reply.clearCookie('user_session', { path: '/_app' })
       throw err
     }
 

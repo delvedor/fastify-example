@@ -9,7 +9,7 @@ const { version } = JSON.parse(readFileSync(join(import.meta.url, '../package.js
 // with the prefix option. In this way every route declared
 // inside this plugin and its children will have the prefix
 // as part of the path.
-export const autoPrefix = '/_scurte'
+export const autoPrefix = '/_app'
 
 /**
  * Fastify tries not to impose you any design decision, but we highly

@@ -2,7 +2,7 @@ import { join } from 'desm'
 import Static from 'fastify-static'
 import Helmet from 'fastify-helmet'
 
-export const autoPrefix = '/_scurte'
+export const autoPrefix = '/_app'
 
 /**
  * This plugin contains all the code needed to serve the frontend of
@@ -56,7 +56,7 @@ export default async function frontend (fastify, opts) {
   // you should definitely use a CDN!
   fastify.register(Static, {
     root: join(import.meta.url, '..', 'public'),
-    prefix: '/public' // since we are using `autoPrefix`, the final path will be `/_scurte/public`
+    prefix: '/public' // since we are using `autoPrefix`, the final path will be `/_app/public`
   })
 
   // The OAuth callback route that we use to extract
@@ -81,8 +81,8 @@ export default async function frontend (fastify, opts) {
       httpOnly: true,
       // The cookie should be sent only to this domain
       sameSite: true,
-      // The cookie should be sent only for the path starting with `/scurte`
-      path: '/_scurte',
+      // The cookie should be sent only for the path starting with `/app`
+      path: '/_app',
       // The cookie should be signed (handled by `fastify-cookie`)
       signed: true,
       maxAge: 604800, // one week in seconds

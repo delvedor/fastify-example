@@ -16,12 +16,12 @@ const client = new Client({
 async function generateApiKeys () {
   const { body } = await client.security.createApiKey({
     body: {
-      name: 'scurte',
+      name: 'app',
       role_descriptors: {
-        'scurte-users': {
+        'fastify-app-users': {
           cluster: ['monitor'],
           index: [{
-            names: ['scurte-*'],
+            names: ['fastify-app-*'],
             privileges: ['all']
           }]
         }

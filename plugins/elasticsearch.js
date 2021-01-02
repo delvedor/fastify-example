@@ -24,7 +24,7 @@ async function elasticsearch (fastify, opts) {
 
   assert(
     ELASTIC_CLOUD_ID || ELASTIC_ADDRESS,
-    'You should confiigure either ELASTIC_CLOUD_ID or ELASTIC_ADDRESS'
+    'You should configure either ELASTIC_CLOUD_ID or ELASTIC_ADDRESS'
   )
 
   const client = new Client({
@@ -34,13 +34,13 @@ async function elasticsearch (fastify, opts) {
   })
 
   const indices = {
-    SHORTURL: 'scurte-shortened-url',
+    SHORTURL: 'fastify-app-shortened-url',
     // The rate limit index contains all the ip addresses the users that
     // sed a request to the application. Given that this index can grown
     // in size very quickly, a god approach would be to create a new index daily
     // and configure Elasticsearch to delete the old ones with an ILM policy.
     // See https://www.elastic.co/guide/en/elasticsearch/reference/current/index-lifecycle-management.html
-    RATELIMIT: 'scurte-rate-limit'
+    RATELIMIT: 'fastify-app-rate-limit'
   }
 
   // We ping the cluster before telling to Fastfy
@@ -116,7 +116,9 @@ async function configureIndices (client, indices) {
       body: {
         mappings: {
           properties: {
+            // request count
             current: { type: 'integer' },
+            // time to live of the request count
             ttl: { type: 'date' }
           }
         }

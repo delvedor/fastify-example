@@ -5,7 +5,7 @@
 
 <main class="gradient-background is-flex is-justify-content-center is-align-items-center">
   <div class="suggestions-box is-flex is-flex-direction-column is-justify-content-space-around is-align-items-center">
-    <h1 class="gradient-text title is-1">Scurte</h1>
+    <h1 class="gradient-text title is-1">App</h1>
     {#if suggestions.length}
       <p class="is-size-5 mb-5">
         It looks like that the short url you asked for does not exists.<br/>

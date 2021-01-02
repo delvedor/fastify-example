@@ -1,5 +1,5 @@
 {
-  "name": "scurte",
+  "name": "fastify-app-example",
   "private": true,
   "version": "1.0.0",
   "description": "",
@@ -41,6 +41,7 @@
     "fastify-oauth2": "^4.2.1",
     "fastify-piscina": "^3.0.0",
     "fastify-plugin": "^3.0.0",
+    "fastify-rate-limit": "^5.0.0",
     "fastify-sensible": "^3.1.0",
     "fastify-static": "^3.3.0",
     "fluent-json-schema": "^2.0.3",

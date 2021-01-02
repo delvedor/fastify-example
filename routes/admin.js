@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-export const autoPrefix = '/_scurte'
+export const autoPrefix = '/_app'
 
 /**
  * This plugin contains all the CRUD operations needed
@@ -265,8 +265,8 @@ export default async function admin (fastify, opts) {
     if (encodeURIComponent(noSlashSource) !== noSlashSource) {
       throw httpErrors.badRequest('The source contains unsafe url characters')
     }
-    if (source.split('/')[0] === '_scurte') {
-      throw httpErrors.badRequest('The source cannot contain the private string "_scurte"')
+    if (source.split('/')[0] === '_app') {
+      throw httpErrors.badRequest('The source cannot contain the private string "_app"')
     }
   }
 }
