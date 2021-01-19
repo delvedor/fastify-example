@@ -1,7 +1,7 @@
 # Fastify App Example
 
-App is a small but feature complete application build with Fastify and Svelte,
-and it aims to show all the core concepts of Fastify, best  practices, and recommendations.
+This project is a small but feature complete application build with Fastify and Svelte,
+and it aims to show all the core concepts of Fastify, best practices, and recommendations.
 
 ## Project structure
 
@@ -90,23 +90,31 @@ Now you can either run the project locally or deploy it.
 
 ### Deploy
 
-[TODO]
+This sections contains the instruction for deploying this application.
 
-#### Vercel
-
-[TODO]
+Would you like to see more recipes? Open an [issue](https://github.com/delvedor/fastify-example/issues/new).
+Do you already have a deploy recipe and want to share it? That's awesome, send a [pull request](https://github.com/delvedor/fastify-example/compare)!
 
 #### Cloud  Run
 
-[TODO]
+Open [`deploy-recipes/cloud-run`](./deploy-recipes/cloud-run), you will find everything you need there.
 
 #### Elastic Cloud
 
-[TODO]
+You can create an Elasticsearch cluster with Elastic Cloud, with a free 14-day trial of the [Elasticsearch Service](https://www.elastic.co/elasticsearch/service). 
 
 ## Contribute
 
-[TODO]
+Feel free to send pull request with new features, bugfix or documentation improvements!
+
+## Questions
+
+Open an [issue](https://github.com/delvedor/fastify-example/issues/new) or take a look at our [`fastify/help`](https://github.com/fastify/help) repository.
+We also have a [Discord community](https://discord.gg/D3FZYPy) you can join.
+
+If you have any question related to Elasticsearch or the Elasticsearch client,
+you can open a new discussion on [discuss.elastic.co](https://discuss.elastic.co/)
+or in the client [issue tracker](https://github.com/elastic/elasticsearch-js/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc).
 
 ## License
 

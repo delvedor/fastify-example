@@ -1,0 +1,61 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      serviceName:
+        description: 'Cloud run service name'
+        required: true
+
+env:
+  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
+  RUN_REGION: europe-west4
+  SERVICE_NAME: ${{ github.event.inputs.serviceName }}
+
+jobs:
+  setup-build-deploy:
+    name: Setup, Build, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+    - name: Install deps
+      run: |
+        npm ci
+
+    - name: Build svelte
+      run: |
+        npm run build
+        ls -al public/build
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.RUN_SA_KEY }}
+        project_id: ${{ secrets.RUN_PROJECT }}
+
+    # Build and push image to Google Container Registry
+    - name: Build
+      run: |-
+        gcloud builds submit \
+          --quiet \
+          --tag "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA"
+
+    # Deploy image to Cloud Run
+    - name: Deploy
+      run: |-
+        gcloud run deploy "$SERVICE_NAME" \
+          --quiet \
+          --region "$RUN_REGION" \
+          --image "gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --platform "managed" \
+          --allow-unauthenticated \
+          --update-env-vars "NODE_ENV=production,ELASTIC_CLOUD_ID=${{ secrets.ELASTIC_CLOUD_ID }},ELASTIC_API_KEY=${{ secrets.ELASTIC_API_KEY }},GITHUB_APP_ID=${{ secrets.GITHUB_APP_ID }},GITHUB_APP_SECRET=${{ secrets.GITHUB_APP_SECRET }},COOKIE_SECRET=${{ secrets.COOKIE_SECRET }},ALLOWED_USERS=${{ secrets.ALLOWED_USERS }}"

@@ -1,0 +1,8 @@
+Dockerfile
+README.md
+node_modules
+npm-debug.log
+test
+.github
+.env
+scripts
