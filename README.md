@@ -21,8 +21,10 @@ You you can read the project in any order, but I would recommend the following:
 1. `routes/redirect/App.svelte`
 1. `ui/*`
 1. `test/helper.js`
-1. `test/plugins/*`
-1. `test/routes/*`
+1. `test/plugins/validUrl.test.js`
+1. `test/routes/status.test.js`
+1. `test/routes/admin.test.js.test.js`
+1. `test/routes/redirect.test.js.test.js`
 
 ## How to run this project
 

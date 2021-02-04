@@ -62,7 +62,7 @@ async function authorization (fastify, opts) {
   // See https://www.fastify.io/docs/latest/Decorators/
   // Testing authentication flow is hard, especially if you are using OAuth flow.
   // As workarond we are using mocks instead of the production authorization utilities.
-  fastify.decorate('authorize', opts.testing ? authorizeMock : authorize)
+  fastify.decorate('authorize', authorize)
   fastify.decorate('isUserAllowed', opts.testing ? isUserAllowedMock : isUserAllowed)
   // `decorateRequest` works in the same way of `decorate`, but it changes
   // the Fastify request object instead. It's very useful if you know you need
@@ -101,7 +101,7 @@ async function authorization (fastify, opts) {
 
     let mail
     try {
-      mail = await isUserAllowed(cookie.value)
+      mail = await fastify.isUserAllowed(cookie.value)
     } catch (err) {
       // Let's clear the cookie as well in case of errors,
       // in this way if a user retries the request we'll save
@@ -113,27 +113,6 @@ async function authorization (fastify, opts) {
     // You can add any property to the request/reply objects,
     // but it's important you declare them in advance with decorators.
     // If you don't, your code will likely be deoptimized by V8.
-    req.user = { mail }
-  }
-
-  // Mocks are double edges swords. The main issue with mocks
-  // is that usually you only test for the success case.
-  // You should test for the bad case as well, so if you are
-  // writing a mock be sure to handle the failure cases as well.
-  async function authorizeMock (req, reply) {
-    const { user_session } = req.cookies
-    if (!user_session) {
-      throw httpErrors.unauthorized('Missing session cookie')
-    }
-
-    const cookie = req.unsignCookie(user_session)
-    if (!cookie.valid) {
-      throw httpErrors.unauthorized('Invalid cookie signature')
-    }
-
-    // For triggering some edge cases you can make use of
-    // custom headers that you only use while testing.
-    const mail = await isUserAllowedMock(req.headers['x-not-allowed-test'] ? undefined : cookie.value)
     req.user = { mail }
   }
 
@@ -169,8 +148,12 @@ async function authorization (fastify, opts) {
     throw httpErrors.badRequest('The user does not have a primary email')
   }
 
+  // Mocks are double edges swords. The main issue with mocks
+  // is that usually you only test for the success case.
+  // You should test for the bad case as well, so if you are
+  // writing a mock be sure to handle the failure cases as well.
   async function isUserAllowedMock (token) {
-    if (token === undefined) {
+    if (token === 'invalid') {
       throw httpErrors.forbidden('You are not allowed to access this')
     }
     return allowedUsers[0]

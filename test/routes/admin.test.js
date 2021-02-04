@@ -26,6 +26,20 @@ t.test('Refresh csrf token', async t => {
   t.match(response.cookies, [{ name: '_csrf' }])
 })
 
+t.test('User not allowed', async t => {
+  const fastify = await build(t)
+
+  const response = await fastify.inject({
+    method: 'GET',
+    path: '/_app/refresh',
+    cookies: {
+      user_session: cookieSignature.sign('invalid', fastify.config.COOKIE_SECRET)
+    }
+  })
+
+  t.strictEqual(response.statusCode, 403)
+})
+
 // Now let's test what happens when a new redirect is added.
 // We are going to use the Elasticsearch mocking utility so we
 // can verify the payload sent to Elasticsearch as well.
