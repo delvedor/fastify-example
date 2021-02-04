@@ -261,11 +261,12 @@ export default async function admin (fastify, opts) {
   }
 
   function isValidSource (source) {
+    // TODO: this check might not be needed
     const noSlashSource = source.replace(/\//g, '')
     if (encodeURIComponent(noSlashSource) !== noSlashSource) {
       throw httpErrors.badRequest('The source contains unsafe url characters')
     }
-    if (source.split('/')[0] === '_app') {
+    if (source.split('/')[1] === '_app') {
       throw httpErrors.badRequest('The source cannot contain the private string "_app"')
     }
   }

@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/delvedor/scurte#readme",
   "dependencies": {
-    "@beyonk/svelte-notifications": "^3.1.0",
     "@elastic/elasticsearch": "^7.10.0",
     "desm": "^1.1.0",
     "fastify": "^3.9.2",
@@ -49,6 +48,8 @@
     "undici": "^3.0.0"
   },
   "devDependencies": {
+    "@beyonk/svelte-notifications": "^3.1.0",
+    "@elastic/elasticsearch-mock": "^0.3.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "crypto-random-string": "^3.3.0",
@@ -60,5 +61,13 @@
     "standard": "^16.0.3",
     "svelte-spa-router": "^3.1.0",
     "tap": "^14.11.0"
+  },
+  "tap": {
+    "esm": false,
+    "ts": false,
+    "jsx": false,
+    "flow": false,
+    "coverage": false,
+    "jobs-auto": true
   }
 }

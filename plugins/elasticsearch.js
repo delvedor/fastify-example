@@ -30,7 +30,8 @@ async function elasticsearch (fastify, opts) {
   const client = new Client({
     ...(ELASTIC_CLOUD_ID && { cloud: { id: ELASTIC_CLOUD_ID } }),
     ...(ELASTIC_ADDRESS && { node: ELASTIC_ADDRESS }),
-    auth: { apiKey: ELASTIC_API_KEY }
+    auth: { apiKey: ELASTIC_API_KEY },
+    ...(opts.elasticMock && { Connection: opts.elasticMock.getConnection() })
   })
 
   const indices = {

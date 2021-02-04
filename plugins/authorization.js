@@ -37,6 +37,7 @@ async function authorization (fastify, opts) {
       auth: OAuth.GITHUB_CONFIGURATION
     },
     startRedirectPath: '/_app/login/github',
+    // TODO: this url should change if we are in prod
     callbackUri: 'http://localhost:3000/_app/login/github/callback',
     scope: ['user:email']
   })
@@ -59,8 +60,10 @@ async function authorization (fastify, opts) {
   // while the second the actual decorator (it can be any js value).
   // You can then access your decorator with `fastify.nameOfTheDecorator`.
   // See https://www.fastify.io/docs/latest/Decorators/
-  fastify.decorate('authorize', authorize)
-  fastify.decorate('isUserAllowed', isUserAllowed)
+  // Testing authentication flow is hard, especially if you are using OAuth flow.
+  // As workarond we are using mocks instead of the production authorization utilities.
+  fastify.decorate('authorize', opts.testing ? authorizeMock : authorize)
+  fastify.decorate('isUserAllowed', opts.testing ? isUserAllowedMock : isUserAllowed)
   // `decorateRequest` works in the same way of `decorate`, but it changes
   // the Fastify request object instead. It's very useful if you know you need
   // to add properties to the request object, as behind the scenes Fastify will
@@ -113,6 +116,27 @@ async function authorization (fastify, opts) {
     req.user = { mail }
   }
 
+  // Mocks are double edges swords. The main issue with mocks
+  // is that usually you only test for the success case.
+  // You should test for the bad case as well, so if you are
+  // writing a mock be sure to handle the failure cases as well.
+  async function authorizeMock (req, reply) {
+    const { user_session } = req.cookies
+    if (!user_session) {
+      throw httpErrors.unauthorized('Missing session cookie')
+    }
+
+    const cookie = req.unsignCookie(user_session)
+    if (!cookie.valid) {
+      throw httpErrors.unauthorized('Invalid cookie signature')
+    }
+
+    // For triggering some edge cases you can make use of
+    // custom headers that you only use while testing.
+    const mail = await isUserAllowedMock(req.headers['x-not-allowed-test'] ? undefined : cookie.value)
+    req.user = { mail }
+  }
+
   async function isUserAllowed (token) {
     const response = await client.request({
       method: 'GET',
@@ -143,6 +167,13 @@ async function authorization (fastify, opts) {
       if (ele.primary) return ele.email
     }
     throw httpErrors.badRequest('The user does not have a primary email')
+  }
+
+  async function isUserAllowedMock (token) {
+    if (token === undefined) {
+      throw httpErrors.forbidden('You are not allowed to access this')
+    }
+    return allowedUsers[0]
   }
 }
 

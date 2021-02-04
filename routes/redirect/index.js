@@ -47,7 +47,7 @@ export default async function short (fastify, opts) {
   async function onGetUrl (req, reply) {
     const source = req.params['*']
     if (source === '') {
-      return reply.redirect('https://github.com/delvedor/scurte')
+      return reply.redirect('https://github.com/delvedor/fastify-example')
     }
 
     const { body: result } = await elastic.search({
