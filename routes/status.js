@@ -54,7 +54,13 @@ export default async function status (fastify, opts) {
     // Since writing plain JSON schema is rather boring
     // and error prone, we have created `fluent-json-schema`,
     // a nice library to help you maintaining JSON schemas.
+    // Another reason to write your route definition with
+    // the schema configured, is that you will get automatic
+    // documentation with https://github.com/fastify/fastify-swagger
     schema: {
+      // The description field will be used by the swagger
+      // generator to describe the route.
+      description: 'Returns status and version of the application',
       response: {
         // You can define different schemas
         // based on the response status code.

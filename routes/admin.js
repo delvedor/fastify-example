@@ -32,6 +32,8 @@ export default async function admin (fastify, opts) {
     method: 'GET',
     path: '/refresh',
     schema: {
+      description: 'Route used by the frontend app to validate the session' +
+                   ' and retrieve the CSRF token.',
       response: {
         200: S.object().prop('csrfToken', S.string())
       }
@@ -72,6 +74,7 @@ export default async function admin (fastify, opts) {
     // that the authorization will be executed before the CSRF check.
     onRequest: csrfProtection,
     schema: {
+      description: 'Adds a new redirect',
       // We do expect a body from the frontend which contains everything
       // we need to create a new redirect. Here we define how the body
       // should look like, so we can trust it once we start working
@@ -140,6 +143,7 @@ export default async function admin (fastify, opts) {
     config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
+      description: 'Updates an existing redirect',
       body: S.object()
         .prop('source', S.string().required())
         .prop('destination', S.string().required())
@@ -183,6 +187,7 @@ export default async function admin (fastify, opts) {
     config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
+      description: 'Removes an existing redirect',
       body: S.object().prop('source', S.string().required()),
       response: {
         200: S.object().prop('deleted', S.boolean())
@@ -215,6 +220,7 @@ export default async function admin (fastify, opts) {
     config: { rateLimit: false },
     onRequest: csrfProtection,
     schema: {
+      description: 'Get all the redirects defined by the current user.',
       // Note that the schema describes how the object will look
       // like in your code and not how the user sent it.
       // The query can be accessed via `request.query` and it's represented
