@@ -3,6 +3,10 @@
 This project is a small but feature complete application build with Fastify and Svelte,
 and it aims to show all the core concepts of Fastify, best practices, and recommendations.
 
+There is no attached blog post or tutorial, you should go through the application code
+and read the code comments, which will explain you best practices, protips, suggestions
+and so forth, I hope you will like it!
+
 ## Project structure
 
 ### How should I read through the comments?
@@ -13,6 +17,7 @@ You you can read the project in any order, but I would recommend the following:
 1. `plugins/elasticsearch.js`
 1. `plugins/rate-limit.js`
 1. `plugins/validUrl.js`
+1. `plugins/swagger.js`
 1. `routes/status.js`
 1. `routes/frontend.js`
 1. `routes/admin.js`
@@ -103,7 +108,7 @@ Open [`deploy-recipes/cloud-run`](./deploy-recipes/cloud-run), you will find eve
 
 #### Elastic Cloud
 
-You can create an Elasticsearch cluster with Elastic Cloud, with a free 14-day trial of the [Elasticsearch Service](https://www.elastic.co/elasticsearch/service). 
+You can create an Elasticsearch cluster with Elastic Cloud, with a free 14-day trial of the [Elasticsearch Service](https://www.elastic.co/elasticsearch/service).
 
 ## Contribute
 
