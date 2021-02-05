@@ -66,6 +66,12 @@ async function elasticsearch (fastify, opts) {
   // when you are shutting down the application, this
   // can be done via the `onClose` hook.
   // https://www.fastify.io/docs/latest/Hooks/#onclose
+  // A cool feature of the onClose hook is that as opposed to
+  // every other hook, which are executed in a FIFO fashion,
+  // onClose is executed in LIFO.
+  // This guarantees that your onClose code depending
+  // on other onClose will be executed first,
+  // avoiding annoying ordering issues.
   fastify.addHook('onClose', (instance, done) => {
     instance.elastic.close(done)
   })
