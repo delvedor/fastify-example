@@ -20,12 +20,12 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/delvedor/scurte.git"
+    "url": "git+https://github.com/delvedor/fastify-example.git"
   },
   "bugs": {
-    "url": "https://github.com/delvedor/scurte/issues"
+    "url": "https://github.com/delvedor/fastify-example/issues"
   },
-  "homepage": "https://github.com/delvedor/scurte#readme",
+  "homepage": "https://github.com/delvedor/fastify-example#readme",
   "dependencies": {
     "@elastic/elasticsearch": "^7.10.0",
     "desm": "^1.1.0",
