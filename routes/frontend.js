@@ -13,7 +13,7 @@ export const autoPrefix = '/_app'
  * the two additonal plugins here and not in the global plugins folder.
  */
 export default async function frontend (fastify, opts) {
-  // `fastify-helmet` helps you securfe your application
+  // `fastify-helmet` helps you secure your application
   // with important security headers. It's not a silver bullet™,
   // but security is an orchestraton of multiple tools that work
   // together to reduce the attack surface of your application.
@@ -81,7 +81,7 @@ export default async function frontend (fastify, opts) {
       httpOnly: true,
       // The cookie should be sent only to this domain
       sameSite: true,
-      // The cookie should be sent only for the path starting with `/app`
+      // The cookie should be sent only for the path starting with `/_app`
       path: '/_app',
       // The cookie should be signed (handled by `fastify-cookie`)
       signed: true,

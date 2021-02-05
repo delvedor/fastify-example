@@ -38,7 +38,7 @@ async function elasticsearch (fastify, opts) {
     SHORTURL: 'fastify-app-shortened-url',
     // The rate limit index contains all the ip addresses the users that
     // sed a request to the application. Given that this index can grown
-    // in size very quickly, a god approach would be to create a new index daily
+    // in size very quickly, a good approach would be to create a new index daily
     // and configure Elasticsearch to delete the old ones with an ILM policy.
     // See https://www.elastic.co/guide/en/elasticsearch/reference/current/index-lifecycle-management.html
     RATELIMIT: 'fastify-app-rate-limit'

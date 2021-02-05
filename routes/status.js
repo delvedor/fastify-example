@@ -30,7 +30,7 @@ export const autoPrefix = '/_app'
  * Why we designed Fastify in this way? Because boring things are predictable.
  * You can have homogeneous or heterogeneous team, and the result will always
  * be the same. The entry barrier in the codebase will be low and everyone
- * will be abel to undertand what's happening.
+ * will be able to undertand what's happening.
  *
  * It's always a good idea to expose a status route, so you can quickly
  * understand if your application is running and which version is deployed.

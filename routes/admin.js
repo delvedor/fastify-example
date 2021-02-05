@@ -21,7 +21,8 @@ export default async function admin (fastify, opts) {
   // Every route inside this plugin should be protected
   // by our authorization logic. The easiest way to do it,
   // is by adding an hook that runs our authorization code.
-  // You should always run your authorization as soon as possible!
+  // You should always run your authorization as soon as possible
+  // in the request/response lifecycle!
   fastify.addHook('onRequest', authorize)
 
   // The frontend needs the CSRF token to be able to
@@ -67,13 +68,13 @@ export default async function admin (fastify, opts) {
     // This route should be protected also against CSRF attacks,
     // so we add an additional hook, `csrfProtection`, which is provided
     // by `fastify-csrf`, to check the CSRF secret and token.
-    // The hoks are always executed in order of declaration, which means
+    // The hooks are always executed in order of declaration, which means
     // that the authorization will be executed before the CSRF check.
     onRequest: csrfProtection,
     schema: {
       // We do expect a body from the frontend which contains everything
       // we need to create a new redirect. Here we define how the body
-      // should look like, soo we can trust it once we start working
+      // should look like, so we can trust it once we start working
       // with it in our route handler. This is not the right place for
       // checking user permission tho, that should be done with an hook.
       // (`preValidation` should do the job)
@@ -101,6 +102,7 @@ export default async function admin (fastify, opts) {
     const { statusCode } = await elastic.create({
       index: indices.SHORTURL,
       id: source,
+      // refresh? https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html
       refresh: 'wait_for',
       body: {
         source,
