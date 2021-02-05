@@ -97,6 +97,20 @@ export default async function admin (fastify, opts) {
     // valid thank to the validation defined above!
     const { source, destination, isPrivate } = req.body
 
+    // Logging is hard. Fastify comes with an integrated logger, already configured
+    // to have the minimum overhead and logs by default incoming request and outgoing
+    // responses. You can correlate different logs via their request id.
+    // https://www.fastify.io/docs/latest/Logging/
+    // A good question you can ask yourself is: "how much should I log?".
+    // Is not an easy answer, it dependes on how many information you want
+    // to know per each request, but remember that the more you log the more
+    // you pay in terms of storage.
+    // If you want to send your logs to Elasticsearch, consider using
+    // https://www.elastic.co/guide/en/ecs-logging/nodejs/current/pino.html
+    // For shipping your logs, you can either use https://github.com/pinojs/pino-elasticsearch
+    // or https://www.elastic.co/beats/filebeat.
+    req.log.info(`Adding new redirect from user ${req.user.mail}`)
+
     isValidSource(source)
     if (!(await isValidUrl(destination))) {
       throw httpErrors.badRequest('The destination is not a valid url')

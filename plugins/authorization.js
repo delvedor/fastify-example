@@ -103,6 +103,7 @@ async function authorization (fastify, opts) {
     try {
       mail = await fastify.isUserAllowed(cookie.value)
     } catch (err) {
+      req.log.warn(`Invalid user tried to authenticate: ${JSON.stringify(err.user)}`)
       // Let's clear the cookie as well in case of errors,
       // in this way if a user retries the request we'll save
       // an additional http request to GitHub.
@@ -139,7 +140,10 @@ async function authorization (fastify, opts) {
 
     const isAllowed = payload.some(ele => allowedUsers.includes(ele.email))
     if (!isAllowed) {
-      throw httpErrors.forbidden('You are not allowed to access this')
+      const err = httpErrors.forbidden('You are not allowed to access this')
+      // let's store the user info so we can log them later
+      err.user = payload
+      throw err
     }
 
     for (const ele of payload) {
