@@ -22,6 +22,7 @@ You you can read the project in any order, but I would recommend the following:
 1. `routes/frontend.js`
 1. `routes/admin.js`
 1. `routes/redirect/index.js`
+1. `routes/redirect/update-count.js`
 1. `routes/redirect/worker.cjs`
 1. `routes/redirect/App.svelte`
 1. `ui/*`
