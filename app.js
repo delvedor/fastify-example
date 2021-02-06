@@ -2,6 +2,7 @@ import AutoLoad from 'fastify-autoload'
 import Sensible from 'fastify-sensible'
 import Env from 'fastify-env'
 import Cors from 'fastify-cors'
+import UnderPressure from 'under-pressure'
 import S from 'fluent-json-schema'
 import { join } from 'desm'
 
@@ -37,6 +38,16 @@ export default async function (fastify, opts) {
   // See the list of recognized plugnis by the core team! https://www.fastify.io/ecosystem/
   // `fastfy-sensible` adds many  small utilities, such as nice http errors.
   fastify.register(Sensible)
+
+  // This plugin is especially useful if you expect an high load
+  // on your application, it measures the process load and returns
+  // a 503 if the process is undergoing too much stress.
+  fastify.register(UnderPressure, {
+    maxEventLoopDelay: 1000,
+    maxHeapUsedBytes: 1000000000,
+    maxRssBytes: 1000000000,
+    maxEventLoopUtilization: 0.98
+  })
 
   // Enables the use of CORS in a Fastify application.
   // https://en.wikipedia.org/wiki/Cross-origin_resource_sharing

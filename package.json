@@ -45,7 +45,9 @@
     "fastify-static": "^3.4.0",
     "fastify-swagger": "^4.1.1",
     "fluent-json-schema": "^2.0.3",
+    "readable-stream": "^3.6.0",
     "svelte": "^3.32.1",
+    "under-pressure": "^5.6.0",
     "undici": "^3.3.0"
   },
   "devDependencies": {
