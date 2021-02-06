@@ -1,5 +1,6 @@
 import Piscina from 'fastify-piscina'
 import { join } from 'desm'
+import UpdateCount from './update-count.js'
 
 /**
  * Finally, the core feature of this application, the redirect!
@@ -30,6 +31,8 @@ export default async function short (fastify, opts) {
   fastify.register(Piscina, {
     filename: join(import.meta.url, 'worker.cjs')
   })
+
+  fastify.register(UpdateCount)
 
   // Let's add two decorators that we'll need only here
   // to handle the html response generation.
@@ -82,16 +85,7 @@ export default async function short (fastify, opts) {
     }
 
     // let's update the click count!
-    await elastic.update({
-      index: indices.SHORTURL,
-      id: firstMatch.source,
-      body: {
-        script: {
-          lang: 'painless',
-          source: 'ctx._source.count += 1'
-        }
-      }
-    })
+    this.updateCount(firstMatch.source)
 
     return reply.redirect(firstMatch.destination)
   }
