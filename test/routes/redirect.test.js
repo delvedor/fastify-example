@@ -36,15 +36,20 @@ t.test('Valid redirect', async t => {
 
   mock.add({
     method: 'POST',
-    path: `/${fastify.indices.SHORTURL}/_update/foo`
+    path: '/_bulk'
   }, params => {
-    t.match(params.body, {
+    t.match(params.body, [{
+      update: {
+        _index: fastify.indices.SHORTURL,
+        _id: 'foo'
+      }
+    }, {
       script: {
         lang: 'painless',
         source: 'ctx._source.count += 1'
       }
-    })
-    return { result: 'updated' }
+    }])
+    return { errors: false, items: [] }
   })
 
   const response = await fastify.inject({
@@ -54,6 +59,8 @@ t.test('Valid redirect', async t => {
 
   t.strictEqual(response.statusCode, 302)
   t.strictEqual(response.headers.location, 'https://fastify.io')
+
+  await fastify.close() // this will trigger a flush in the bulk updater
 })
 
 t.test('Suggest redirect', async t => {
