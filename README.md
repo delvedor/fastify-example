@@ -14,7 +14,7 @@ and so forth, I hope you will like it!
 You you can read the project in any order, but I would recommend the following:
 
 1. `app.js`
-1. `plugins/authorization/index.js`
+1. `plugins/authorization.js`
 1. `plugins/elasticsearch.js`
 1. `plugins/rate-limit.js`
 1. `plugins/validUrl.js`
