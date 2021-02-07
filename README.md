@@ -13,6 +13,7 @@ and so forth, I hope you will like it!
 
 You you can read the project in any order, but I would recommend the following:
 
+1. `app.js`
 1. `plugins/authorization/index.js`
 1. `plugins/elasticsearch.js`
 1. `plugins/rate-limit.js`
@@ -31,6 +32,38 @@ You you can read the project in any order, but I would recommend the following:
 1. `test/routes/status.test.js`
 1. `test/routes/admin.test.js.test.js`
 1. `test/routes/redirect.test.js.test.js`
+
+## FAQ
+
+### You are using ESM, how are you compiling the project?
+
+I'm not. From Node.js v12.17 and Node.js v14 ES Modules are supported [out of the box](https://nodejs.org/api/esm.html).
+As you can see in the `package.json`, there is a new field: `{ "type": "module" }`.
+That field will instruct Node.js that the project is using ESM instead of CJS (common js, which is
+`require`/`module.exports`), and every `.js` file will be a ESM module, while every `.cjs` file will be a CJS module.
+
+A follow up question you can ask now is: "why is there a `rollup.config.js`?
+Great question! That is used for compiling the Svelte frontend locatated in `ui/`.
+
+### Can I use TypeScript?
+
+Yes! Fastify does support TypeScript [out of the box](https://www.fastify.io/docs/latest/TypeScript/)!
+The project is written in plain JavaScript because I didn't want to add too many things
+to the project, but probably in the future there will be a branch with a TypeScript implementation.
+
+### Why you aren't using try-catch block in route declarations?
+
+Fastify does support promises/async-await [out of the box](https://www.fastify.io/docs/latest/Routes/#async-await).
+Everything is handled for you, if you throw an error inside a route handler (same goes
+for hooks or plugins) the error will be catched automatically by Fastify and return
+the most approriate error.
+
+### Why Svelte?
+
+No specific reason, any frontend framework will do the job well. I used Svelte because I like
+it and because it make very easy to think about the frontend, without making me think
+too much about how something should be written or weird APIs, but directly focusing
+on the business logic while writing almost plain html/css/js.
 
 ## How to run this project
 
