@@ -47,21 +47,21 @@ Great question! That is used for compiling the Svelte frontend locatated in `ui/
 
 ### Can I use TypeScript?
 
-Yes! Fastify does support TypeScript [out of the box](https://www.fastify.io/docs/latest/TypeScript/)!
+Yes! Fastify supports TypeScript [out of the box](https://www.fastify.io/docs/latest/TypeScript/)!
 The project is written in plain JavaScript because I didn't want to add too many things
 to the project, but probably in the future there will be a branch with a TypeScript implementation.
 
-### Why you aren't using try-catch block in route declarations?
+### Why aren't you using a try-catch block in route declarations?
 
-Fastify does support promises/async-await [out of the box](https://www.fastify.io/docs/latest/Routes/#async-await).
+Fastify supports promises/async-await [out of the box](https://www.fastify.io/docs/latest/Routes/#async-await).
 Everything is handled for you, if you throw an error inside a route handler (same goes
-for hooks or plugins) the error will be catched automatically by Fastify and return
+for hooks or plugins) the error will be caught automatically by Fastify and return
 the most approriate error.
 
 ### Why Svelte?
 
 No specific reason, any frontend framework will do the job well. I used Svelte because I like
-it and because it make very easy to think about the frontend, without making me think
+it and because it makes it very easy to think about the frontend, without making me think
 too much about how something should be written or weird APIs, but directly focusing
 on the business logic while writing almost plain html/css/js.
 
@@ -131,7 +131,7 @@ Now you can either run the project locally or deploy it.
 
 ### Deploy
 
-This sections contains the instruction for deploying this application.
+This section contains instructions for deploying this application.
 
 Would you like to see more recipes? Open an [issue](https://github.com/delvedor/fastify-example/issues/new).
 Do you already have a deploy recipe and want to share it? That's awesome, send a [pull request](https://github.com/delvedor/fastify-example/compare)!
