@@ -35,8 +35,8 @@ export default async function (fastify, opts) {
   // Fastify is an extremely lightweight framework, it does very little for you.
   // Every feature you might need, such as cookies or database coonnectors
   // is provided by external plugins.
-  // See the list of recognized plugnis by the core team! https://www.fastify.io/ecosystem/
-  // `fastfy-sensible` adds many  small utilities, such as nice http errors.
+  // See the list of recognized plugins  by the core team! https://www.fastify.io/ecosystem/
+  // `fastify-sensible` adds many  small utilities, such as nice http errors.
   fastify.register(Sensible)
 
   // This plugin is especially useful if you expect an high load
