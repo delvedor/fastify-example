@@ -10,7 +10,7 @@ import undici from 'undici'
  * Authentication is a core component of virtually every application.
  * Fastify does not come with a prebuilt authentication solution, but it offers
  * many plugins instead, so you can choose the one that fits your needs.
- * In this application we want our users to login via GitHub, and then share the
+ * In this application we want our users to login via GitHub and then share the
  * access token with the frontend via signed cookies.
  */
 async function authorization (fastify, opts) {
@@ -70,20 +70,20 @@ async function authorization (fastify, opts) {
   // optimize the code for you.
   fastify.decorateRequest('user', null)
 
-  // A good pattern to follow is to always expose utilities that interacts with
+  // A good pattern to follow is to always expose utilities that interact with
   // the request/response lifecycle as functions with the hook signature.
   // See https://www.fastify.io/docs/latest/Hooks/
   // By exposing the authorization function with the hook signature, we can
-  // use it everywhere in our application by adding a plugin level hook that
-  // uses it or a route level hook.
+  // use it everywhere in our application by adding a plugin or a route level
+  // hook that uses it.
   // One of the unwritten core principles with Fastify is "keep things boring",
   // it will help you keep the complexity low, scale well in heterogeneous teams
   // and lower the barrier of entry.
   //
   // The authorization hook will look at the cookies and extract the session
-  // cookie, in this case `user_session`, if not present, throw an error
-  // with `httpErrors.unauthorized` an utility added by `fastify-sensible`.
-  // If the cookie is present it will try too unsign it and finally
+  // cookie, in this case `user_session`. If it is not present, throws an error
+  // with `httpErrors.unauthorized`, a utility added by `fastify-sensible`.
+  // If the cookie is present it will try to unsign it and finally
   // verify with the OAuth provider if the provided token is valid
   // and is part of the allowed users list.
   // If the user is accepeted, it will update the `request.user` property
@@ -164,12 +164,12 @@ async function authorization (fastify, opts) {
   }
 }
 
-// When exporting a plugin that exposes an utility that will need to be used
+// When exporting a plugin that exposes a utility that will need to be used
 // in other parts of your application, use `fastify-plugin` to tell Fastify that
 // this plugin should not be encapsulated. See https://www.fastify.io/docs/latest/Encapsulation/.
 export default fp(authorization, {
   // Protip: if you name your plugins, the stack trace in case of errors
-  //         wiill be easier to read, and other plugins can declare their dependency
+  //         will be easier to read and other plugins can declare their dependency
   //         on this one. `fastify-autoload` will take care of loading the plugins
   //         in the correct order.
   name: 'authorization'
