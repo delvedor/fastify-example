@@ -11,7 +11,7 @@ and so forth, I hope you will like it!
 
 ### How should I read through the comments?
 
-You you can read the project in any order, but I would recommend the following:
+You can read the project in any order, but I would recommend the following:
 
 1. `app.js`
 1. `plugins/authorization.js`
