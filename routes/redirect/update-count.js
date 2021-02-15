@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin'
-import rs from 'readable-stream';
-const { Readable } = rs;
+import rs from 'readable-stream'
+const { Readable } = rs
 
 // In some cases you might need a custom plugin only in a specific
 // part of yoru application. As we saw before, every plugin that needs
