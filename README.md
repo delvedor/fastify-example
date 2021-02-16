@@ -64,7 +64,7 @@ You can read the project in any order, but I would recommend the following:
 
 ### You are using ESM, how are you compiling the project?
 
-I'm not. From Node.js v12.17 and Node.js v14 ES Modules are supported [out of the box](https://nodejs.org/api/esm.html).
+I'm not. From Node.js v12.20 and Node.js v14 ES Modules are supported [out of the box](https://nodejs.org/api/esm.html).
 As you can see in the `package.json`, there is a new field: `{ "type": "module" }`.
 That field will instruct Node.js that the project is using ESM instead of CJS (common js, which is
 `require`/`module.exports`), and every `.js` file will be a ESM module, while every `.cjs` file will be a CJS module.
