@@ -154,7 +154,7 @@ Now you can either run the project locally or deploy it.
     ```
 
     ```dosini
-    ELASTIC_URL=<result.address>
+    ELASTIC_ADDRESS=<result.address>
     ELASTIC_API_KEY=<result.apiKey>
     ```
 
