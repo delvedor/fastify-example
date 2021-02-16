@@ -147,7 +147,7 @@ Now you can either run the project locally or deploy it.
     npm run elasticsearch
     ```
 
-4. Once Elasticsearch is up and running, run the `prepare-elasticsearch` script and copy the result in the `ELASTIC_URL` and `ELASTIC_API_KEY` env variables:
+4. Once Elasticsearch is up and running, run the `prepare-elasticsearch` script and copy the result in the `ELASTIC_ADDRESS` and `ELASTIC_API_KEY` env variables:
 
     ```js
     node scripts/prepare-elasticsearch.js
