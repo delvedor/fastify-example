@@ -55,6 +55,7 @@
     "@elastic/elasticsearch-mock": "^0.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.1.1",
+    "cookie-signature": "^1.1.0",
     "crypto-random-string": "^3.3.0",
     "rollup": "^2.38.4",
     "rollup-plugin-css-only": "^3.1.0",
