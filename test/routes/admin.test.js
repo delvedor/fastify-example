@@ -5,7 +5,7 @@ import { build, buildElasticMock } from '../helper.js'
 
 // When opening the application the first thing that happens
 // is a call to `/refresh`, to figure out if the user is logged
-// or not and also to retrieve the CSRF token/secret.
+// in or not and also to retrieve the CSRF token/secret.
 t.test('Refresh csrf token', async t => {
   const fastify = await build(t)
 
@@ -17,7 +17,7 @@ t.test('Refresh csrf token', async t => {
     }
   })
 
-  // Once we get back che response, we run our assertions
+  // Once we get back the response, we run our assertions
   // to verify that we got back the response that we were expecting.
   t.strictEqual(response.statusCode, 200)
   // We can't know the value of the csrf token,
@@ -67,7 +67,7 @@ t.test('Add a new redirect (201)', async t => {
   // We define every time the entire http call, with
   // all the necessary headers a configuration, no shortcuts.
   // In this way we make sure that our security works
-  // and we don't leave unwanted "backdoors" around.
+  // and we don't leave unwanted "back-doors" around.
   const response = await fastify.inject({
     method: 'PUT',
     path: '/_app/redirect',

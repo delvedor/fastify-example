@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs'
 import { join } from 'desm'
-// Any testing framework is fine, but we recommend to use the ones
-// that interacts as less as possible with the Node.js environment.
-// If your testing framework updates or chanegs Node.js globals
+// Any testing framework is fine, but we recommend using the ones
+// that interact the least with the Node.js environment.
+// If your testing framework updates or changes Node.js globals
 // your test will not be 100% reliable and the libraries you will
 // use might have some issues with it.
 import t from 'tap'
@@ -34,7 +34,7 @@ t.test('Status route', async t => {
     path: '/_app/status'
   })
 
-  // Once we get back che response, we run our assertions
+  // Once we get back the response, we run our assertions
   // to verify that we got back the response that we were expecting.
   t.strictEqual(response.statusCode, 200)
   t.deepEqual(response.json(), { status: 'ok', version })

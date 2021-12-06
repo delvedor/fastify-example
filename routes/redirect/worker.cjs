@@ -2,8 +2,8 @@
 
 /**
  * Here the magic happens!
- * This the worker thread code, it receives from the main
- * thread the array of suggestions and passes it to the svelte
+ * This is the worker thread code, it receives the array of suggestions
+ * from the main thread and passes it to the svelte
  * rendering API. Once Svelte has rendered the content, we create
  * a valid html file and return it back to the main thread,
  * so it can be sent back to the user.

@@ -3,15 +3,15 @@ import fp from 'fastify-plugin'
 import { Client } from '@elastic/elasticsearch'
 
 /**
- * A tipical usage of a plugin, is to expose an external service,
+ * A typical usage of a plugin, is to expose an external service,
  * such as a database. In this case we are exposing the Elasticsearch client
- * since the application uses elasticsearch as main datastore.
+ * since the application uses elasticsearch as a main datastore.
  * As you will see, inside this plugin we are not only exposing the
  * Elasticsearch instance, but also initializing the necessary indices.
  *
  * Protip: A rule of thumb to follow is that every plugin should be self-contained,
- * and initialize all of its resources before telling to Fastify that is ready to go.
- * By design, Fastify won't start listeing to incoming requests if all the registered
+ * and initialize all of its resources before telling Fastify that is ready to go.
+ * By design, Fastify won't start listening to incoming requests until all the registered
  * plugins have finished their loading. Fastify guarantees the loading order
  * thanks to an internal graph structure, provided by https://github.com/fastify/avvio.
  */
@@ -36,15 +36,15 @@ async function elasticsearch (fastify, opts) {
 
   const indices = {
     SHORTURL: 'fastify-app-shortened-url',
-    // The rate limit index contains all the ip addresses the users that
-    // sed a request to the application. Given that this index can grown
+    // The rate limit index contains all the ip addresses that the users
+    // send as requests to the application. Given that this index can grow
     // in size very quickly, a good approach would be to create a new index daily
     // and configure Elasticsearch to delete the old ones with an ILM policy.
     // See https://www.elastic.co/guide/en/elasticsearch/reference/current/index-lifecycle-management.html
     RATELIMIT: 'fastify-app-rate-limit'
   }
 
-  // We ping the cluster before telling to Fastfy
+  // We ping the cluster before telling Fastfy
   // that the plugin is ready. If the ping operation
   // fails, the plugin will throw an exception and the
   // application won't start.
@@ -62,6 +62,12 @@ async function elasticsearch (fastify, opts) {
   // need to update the entire application.
   fastify.decorate('indices', indices)
 
+  //  FIFO stands for "first in, first out" and assumes the
+  // first items in the list are the first ones
+  // you want. LIFO, also known as "last in, first out," assumes
+  // the most recent items entered into your list will be
+  // the ones out.
+  //
   // Often, you need to disconnect from an external service
   // when you are shutting down the application, this
   // can be done via the `onClose` hook.
@@ -69,8 +75,9 @@ async function elasticsearch (fastify, opts) {
   // A cool feature of the onClose hook is that as opposed to
   // every other hook, which are executed in a FIFO fashion,
   // onClose is executed in LIFO.
-  // This guarantees that your onClose code depending
-  // on other onClose will be executed first,
+  //
+  // This guarantees that your onClose code, depending
+  // on other onClose functions will be executed first,
   // avoiding annoying ordering issues.
   fastify.addHook('onClose', (instance, done) => {
     instance.elastic.close(done)
@@ -94,7 +101,7 @@ async function configureIndices (client, indices) {
             source: {
               type: 'text',
               // source is defined a text, which cannot be sorted by Elasticsearch.
-              // To solve this we used the multi-fields feaure:
+              // To solve this we used the multi-fields feature:
               // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
               fields: {
                 raw: { type: 'keyword' }
@@ -104,7 +111,7 @@ async function configureIndices (client, indices) {
             destination: { type: 'text' },
             // should the source appear in the 404 suggestions?
             isPrivate: { type: 'boolean' },
-            // how many times a shot url has been used
+            // how many times a short url has been used
             count: { type: 'integer' },
             // who has created the short url
             user: { type: 'keyword' },

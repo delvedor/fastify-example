@@ -40,7 +40,7 @@ async function swaggerGenerator (fastify, opts) {
     },
     // let's expose the documentation only in development
     // it's up to you decide who should see this page,
-    // but it's alwaysx better to start safe.
+    // but it's always better to start safe.
     exposeRoute: fastify.config.NODE_ENV !== 'production'
   })
 }
