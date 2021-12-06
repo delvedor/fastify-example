@@ -26,7 +26,7 @@ export default async function admin (fastify, opts) {
   fastify.addHook('onRequest', authorize)
 
   // The frontend needs the CSRF token to be able to
-  // communicate with the others API. This route returns
+  // communicate with the other APIs. This route returns
   // a token for every authenticated request.
   fastify.route({
     method: 'GET',
@@ -76,10 +76,10 @@ export default async function admin (fastify, opts) {
     schema: {
       description: 'Adds a new redirect',
       // We do expect a body from the frontend which contains everything
-      // we need to create a new redirect. Here we define how the body
+      // we need to create a new redirect. Here we define what the body
       // should look like, so we can trust it once we start working
       // with it in our route handler. This is not the right place for
-      // checking user permission tho, that should be done with an hook.
+      // checking user permission though, that should be done with a hook.
       // (`preValidation` should do the job)
       body: S.object()
         .prop('source', S.string().required())
@@ -102,9 +102,8 @@ export default async function admin (fastify, opts) {
     // responses. You can correlate different logs via their request id.
     // https://www.fastify.io/docs/latest/Logging/
     // A good question you can ask yourself is: "how much should I log?".
-    // Is not an easy answer, it dependes on how many information you want
-    // to know per each request, but remember that the more you log the more
-    // you pay in terms of storage.
+    // It is not an easy question, it depends on how much information you want.
+    // The more you log, the more you pay in terms of storage.
     // If you want to send your logs to Elasticsearch, consider using
     // https://www.elastic.co/guide/en/ecs-logging/nodejs/current/pino.html
     // For shipping your logs, you can either use https://github.com/pinojs/pino-elasticsearch
@@ -133,7 +132,7 @@ export default async function admin (fastify, opts) {
       }
     }, {
       // ignore is a cool option of the Elasticsearch client,
-      // it tell to the client not to throw in case of the specified
+      // it tells the client not to throw in case of the specified
       // error, so you can handle it easily without the need of a try catch block.
       ignore: [409]
     })
@@ -143,7 +142,7 @@ export default async function admin (fastify, opts) {
     }
 
     // Hey! we created a new resource, let's use
-    // the appropriate status code. And rememeber
+    // the appropriate status code. And remember
     // to configure the response schema as well.
     reply.code(201)
     return { created: true }
@@ -235,7 +234,7 @@ export default async function admin (fastify, opts) {
     onRequest: csrfProtection,
     schema: {
       description: 'Get all the redirects defined by the current user.',
-      // Note that the schema describes how the object will look
+      // Note that the schema describes what the object will look
       // like in your code and not how the user sent it.
       // The query can be accessed via `request.query` and it's represented
       // by an object. The same can apply if a request body is encoded
@@ -270,7 +269,7 @@ export default async function admin (fastify, opts) {
           term: { user: req.user.mail }
         },
         // source is defined a text, which cannot be sorted by Elasticsearch.
-        // To solve this we used the multi-fields feaure:
+        // To solve this we used the multi-fields feature:
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
         sort: 'source.raw'
       }

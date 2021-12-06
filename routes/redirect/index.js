@@ -7,12 +7,12 @@ import UpdateCount from './update-count.js'
  * Normally if a url shortener doesn't find a matching source,
  * it will return a 404. To make it more interesting, we'll use
  * the full text search capabilities of Elasticsearch and try to
- * suggest a url to he user in case of a typo (à la Google).
+ * suggest a url to the user in case of a typo (à la Google).
  * Wait! Let's do something more, the UI that will suggest alternative
- * urls or show the 404 page will be server rendered wth Svelte (https://svelte.dev/).
+ * urls or show the 404 page will be server rendered with Svelte (https://svelte.dev/).
  * As you saw in the Elasticsearch plugin, a good rule of thumb is that
- * every plugin should be self-contained, reason why we are registering
- * the an additonal plugin here and not in the global plugins folder.
+ * every plugin should be self-contained, this is the reason why we are registering
+ * the additional plugin here and not in the global plugins folder.
  */
 export default async function short (fastify, opts) {
   const {

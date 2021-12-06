@@ -19,13 +19,13 @@ async function authorization (fastify, opts) {
   // so we configure an allow list of emails that we accept.
   const allowedUsers = config.ALLOWED_USERS.split(',')
 
-  // Undici is an http client for Node.js extremely optimized
-  // to achieve the best performances possible. Is very well
+  // Undici is an http client for Node.js, it is extremely optimized
+  // to achieve the best performances possible. It is very well
   // suited if you need to send all the request to the same endpoint.
   const client = undici('https://api.github.com')
 
   // `fastify-oauth2` is a plugin that helps you handle oauth2 flows.
-  // It comes with preconfigured settings for the major oauth providers.
+  // It comes with pre configured settings for the major oauth providers.
   // Are you using Auth0? See https://npm.im/fastify-auth0-verify
   fastify.register(OAuth, {
     name: 'github',
@@ -61,10 +61,10 @@ async function authorization (fastify, opts) {
   // You can then access your decorator with `fastify.nameOfTheDecorator`.
   // See https://www.fastify.io/docs/latest/Decorators/
   // Testing authentication flow is hard, especially if you are using OAuth flow.
-  // As workarond we are using mocks instead of the production authorization utilities.
+  // As workaround we are using mocks instead of the production authorization utilities.
   fastify.decorate('authorize', authorize)
   fastify.decorate('isUserAllowed', opts.testing ? isUserAllowedMock : isUserAllowed)
-  // `decorateRequest` works in the same way of `decorate`, but it changes
+  // `decorateRequest` works in the same way as `decorate`, but it changes
   // the Fastify request object instead. It's very useful if you know you need
   // to add properties to the request object, as behind the scenes Fastify will
   // optimize the code for you.
@@ -81,12 +81,12 @@ async function authorization (fastify, opts) {
   // and lower the barrier of entry.
   //
   // The authorization hook will look at the cookies and extract the session
-  // cookie, in this case `user_session`. If it is not present, throws an error
+  // cookie, in this case `user_session`. If it is not present, it throws an error
   // with `httpErrors.unauthorized`, a utility added by `fastify-sensible`.
-  // If the cookie is present it will try to unsign it and finally
+  // If the cookie is present it will try to un-sign it and finally
   // verify with the OAuth provider if the provided token is valid
   // and is part of the allowed users list.
-  // If the user is accepeted, it will update the `request.user` property
+  // If the user is accepted, it will update the `request.user` property
   // with the mail address of the user.
   async function authorize (req, reply) {
     const { user_session } = req.cookies
@@ -113,7 +113,7 @@ async function authorization (fastify, opts) {
 
     // You can add any property to the request/reply objects,
     // but it's important you declare them in advance with decorators.
-    // If you don't, your code will likely be deoptimized by V8.
+    // If you don't, your code will likely be de-optimized by V8.
     req.user = { mail }
   }
 
@@ -154,7 +154,7 @@ async function authorization (fastify, opts) {
 
   // Mocks are double edges swords. The main issue with mocks
   // is that usually you only test for the success case.
-  // You should test for the bad case as well, so if you are
+  // You should test for the failure case as well, so if you are
   // writing a mock be sure to handle the failure cases as well.
   async function isUserAllowedMock (token) {
     if (token === 'invalid') {
@@ -168,9 +168,9 @@ async function authorization (fastify, opts) {
 // in other parts of your application, use `fastify-plugin` to tell Fastify that
 // this plugin should not be encapsulated. See https://www.fastify.io/docs/latest/Encapsulation/.
 export default fp(authorization, {
-  // Protip: if you name your plugins, the stack trace in case of errors
-  //         will be easier to read and other plugins can declare their dependency
-  //         on this one. `fastify-autoload` will take care of loading the plugins
+  // Protip: name your plugins, in the case of errors, the stack trace will display
+  //         those names. It will be easier to read and other plugins can declare their
+  //         dependency on yours. `fastify-autoload` will take care of loading the plugins
   //         in the correct order.
   name: 'authorization'
 })

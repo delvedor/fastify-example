@@ -9,15 +9,15 @@ import { join } from 'desm'
 /**
  * This is the entry point of our application. As everything in Fastify is a plugin.
  * The main reason why the entry point is a plugin as well is that we can easily
- * import it in our testing suite and add this application as a subcomponent
- * of another Fastify application. The encapsulaton system, of Fastify will make sure
+ * import it in our testing suite and add this application as a sub component
+ * of another Fastify application. The encapsulation system, of Fastify will make sure
  * that you are not leaking dependencies and business logic.
  * For more info, see https://www.fastify.io/docs/latest/Encapsulation/
  */
 export default async function (fastify, opts) {
   // It's very common to pass secrets and configuration
   // to you application via environment variables.
-  // The `fastify-env` plugin will expose those configuration
+  // The `fastify-env` plugin will expose those configurations
   // under `fastify.config` and validate those at startup.
   fastify.register(Env, {
     schema: S.object()
@@ -33,10 +33,10 @@ export default async function (fastify, opts) {
   })
 
   // Fastify is an extremely lightweight framework, it does very little for you.
-  // Every feature you might need, such as cookies or database coonnectors
+  // Every feature you might need, such as cookies or database connectors
   // is provided by external plugins.
-  // See the list of recognized plugins  by the core team! https://www.fastify.io/ecosystem/
-  // `fastify-sensible` adds many  small utilities, such as nice http errors.
+  // See the list of recognized plugins by the core team! https://www.fastify.io/ecosystem/
+  // `fastify-sensible` adds many small utilities, such as nice http errors.
   fastify.register(Sensible)
 
   // This plugin is especially useful if you expect an high load
@@ -55,9 +55,10 @@ export default async function (fastify, opts) {
     origin: false
   })
 
-  // Normally you would need to load by hand each plugin. `fastify-autoload` is an utility
-  // we wrote to solve this specific problems. It loads all the content from the specified
-  // folder, even the subfolders. Take at look at its documentation, as it's doing a lot more!
+  // Normally you would need to load each plugin by hand. `fastify-autoload` is an utility
+  // we wrote to solve this specific problem. It loads all the content from the specified
+  // folder, even the sub folders. Take at look at its documentation
+  // https://github.com/fastify/fastify-autoload,as it's doing a lot more!
   // First of all, we require all the plugins that we'll need in our application.
   fastify.register(AutoLoad, {
     dir: join(import.meta.url, 'plugins'),

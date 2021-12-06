@@ -25,7 +25,7 @@ async function rateLimit (fastify, opts) {
 
     // This method will be called each time a new request comes in.
     // To avoid sending too many request to Elasticsearch, we'll
-    // use the update API, which allow us to update the document
+    // use the update API, which allows us to update the document
     // if present, create it if it doesn't exists and read the
     // updated document. In this way we'll send up to 2 requests
     // to Elasticsearch for each `incr` call, but only one in case
@@ -77,7 +77,7 @@ async function rateLimit (fastify, opts) {
     }
   }
 
-  // `fastify-rate-limit` does not allow to configure a custom response
+  // `fastify-rate-limit` does not allow us to configure a custom response
   // that is not a JSON, which means that if we want to send something
   // different, say an html page, we need to intercept the error and
   // change the response. This can be achieved by using the `.setErrorHandler`
@@ -96,7 +96,7 @@ async function rateLimit (fastify, opts) {
   }
 
   // Finally register the rate limit plugin
-  // and add the needd configuration.
+  // and add the needed configuration.
   fastify.register(RateLimit, {
     allowList: ['127.0.0.1'], // no rate limit in our machine
     store: ElasticsearchStore,

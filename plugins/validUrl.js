@@ -4,11 +4,11 @@ import https from 'https'
 
 /**
  * This application is an url shortener, and we want to be sure that
- * a destination url exists before to store it in Elasticsearch.
+ * a destination url exists before storing it in Elasticsearch.
  * This plugins adds a single `isValidUrl` decorator that performs
- * an http request the the destination url to figure out if the url is valid.
+ * an http request to the the destination url to figure out if the url is valid.
  * We are not using `undici` as client (like in the authorization plugin)
- * because undici is best suiited for calling the same endpoint multiple
+ * because undici is best suited for calling the same endpoint multiple
  * times, while the Node.js core http client can talk with multiple
  * addresses more easily.
  */

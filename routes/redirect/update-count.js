@@ -2,14 +2,14 @@ import fp from 'fastify-plugin'
 import { Readable } from 'readable-stream'
 
 // In some cases you might need a custom plugin only in a specific
-// part of yoru application. As we saw before, every plugin that needs
+// part of your application. As we saw before, every plugin that needs
 // or could be shared with the entire application should live inside
 // the top level `/plugins` directory. In this case since we need this
 // plugin to operate only in the `/redirect` scope, we will define it here.
 // As you can see, the redirect plugin lives inside a folder instead of a file,
 // what is the difference? `fastify-autoload` will automatically load every file
 // inside the `/routes` folder, or every folder that contains an `index.js` file.
-// In this way we have just created a specifc scope for our redirect logic that
+// In this way we have just created a specific scope for our redirect logic that
 // will not be shared with other plugins of your application.
 // Thanks encapsulation! :rocket:
 
@@ -59,7 +59,7 @@ async function updateCount (fastify, opts) {
   })
 
   // This onClose hook will be executed before the onClose's Elasticsearch
-  // hook, because onClose hooks are executed in LIFO. This guranteees us
+  // hook, because onClose hooks are executed in LIFO. This guarantees us
   // that we will not lose data or see unwanted exceptions while closing.
   fastify.addHook('onClose', (instance, done) => {
     updateCountStream.push(null)

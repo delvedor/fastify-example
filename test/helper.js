@@ -28,8 +28,8 @@ export async function build (t, opts = {}) {
   return app
 }
 
-// Mocking is a double edged sword, it makes very easy
-// writing test, but it could also lead to false positives
+// Mocking is a double edged sword, it makes it very easy
+// to write tests, but it could also lead to false positives
 // as often you only test for the successful case.
 // This does not mean that mocks should be avoided altogether,
 // but it might make sense to mix it with real database tests.

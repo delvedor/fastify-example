@@ -9,16 +9,16 @@ export const autoPrefix = '/_app'
  * the application, it registers additional plugins to handle
  * static file serving and helmet security headers.
  * As you saw in the Elasticsearch plugin, a good rule of thumb is that
- * every plugin should be self-contained, reason why we are registering
- * the two additonal plugins here and not in the global plugins folder.
+ * every plugin should be self-contained, this is the reason why we are
+ * registering two additional plugins here and not in the global plugins folder.
  */
 export default async function frontend (fastify, opts) {
   // `fastify-helmet` helps you secure your application
   // with important security headers. It's not a silver bullet™,
-  // but security is an orchestraton of multiple tools that work
+  // but security is an orchestration of multiple tools that work
   // together to reduce the attack surface of your application.
   fastify.register(Helmet, {
-    // Here we are telling to the browser to only
+    // Here we are telling the browser to only
     // accept content from the following sources.
     contentSecurityPolicy: {
       directives: {
