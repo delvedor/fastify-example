@@ -16,7 +16,7 @@ import { join } from 'desm'
  */
 export default async function (fastify, opts) {
   // It's very common to pass secrets and configuration
-  // to you application via environment variables.
+  // to your application via environment variables.
   // The `fastify-env` plugin will expose those configuration
   // under `fastify.config` and validate those at startup.
   fastify.register(Env, {
