@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs'
 import { join } from 'desm'
 import fp from 'fastify-plugin'
-import Swagger from 'fastify-swagger'
+import Swagger from '@fastify/swagger'
+import SwaggerUI from '@fastify/swagger-ui'
 
 const { version } = JSON.parse(readFileSync(join(import.meta.url, '../package.json')))
 
@@ -9,8 +10,7 @@ async function swaggerGenerator (fastify, opts) {
   // Swagger documentation generator for Fastify.
   // It uses the schemas you declare in your routes to generate a swagger compliant doc.
   // https://github.com/fastify/fastify-swagger
-  fastify.register(Swagger, {
-    routePrefix: '/documentation',
+  await fastify.register(Swagger, {
     swagger: {
       info: {
         title: 'Fastify URL Shortener',
@@ -43,6 +43,12 @@ async function swaggerGenerator (fastify, opts) {
     // but it's alwaysx better to start safe.
     exposeRoute: fastify.config.NODE_ENV !== 'production'
   })
+
+  if (fastify.config.NODE_ENV !== 'production') {
+    await fastify.register(SwaggerUI, {
+      routePrefix: '/documentation'
+    })
+  }
 }
 
 export default fp(swaggerGenerator, {

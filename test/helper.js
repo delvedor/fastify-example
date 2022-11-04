@@ -5,7 +5,7 @@ import App from '../app.js'
 
 // We need to load the env configuration
 process.env.NODE_ENV = 'development'
-process.env.ELASTIC_ADDRESS = 'http://localhost:9200'
+process.env.ELASTIC_ADDRESS = 'https://localhost:9200'
 process.env.ELASTIC_API_KEY = '<api-key>'
 process.env.GITHUB_APP_ID = '<app-id>'
 process.env.GITHUB_APP_SECRET = '<app-secret>'
@@ -23,7 +23,7 @@ export async function build (t, opts = {}) {
   }
   await app.register(fp(App), { testing: true, ...opts })
 
-  t.tearDown(app.close.bind(app))
+  t.teardown(app.close.bind(app))
 
   return app
 }

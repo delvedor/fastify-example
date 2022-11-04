@@ -27,6 +27,6 @@ t.test('Should check if a url is valid', async t => {
   await fastify.ready()
 
   // Test!
-  t.true(await fastify.isValidUrl('https://fastify.io'))
-  t.false(await fastify.isValidUrl('http://foo.bar'))
+  t.ok(await fastify.isValidUrl('https://fastify.io'))
+  t.notOk(await fastify.isValidUrl('http://foo.bar'))
 })

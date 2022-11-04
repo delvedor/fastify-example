@@ -1,10 +1,10 @@
 /* eslint camelcase: 0 */
 
 import fp from 'fastify-plugin'
-import OAuth from 'fastify-oauth2'
-import Cookie from 'fastify-cookie'
-import Csrf from 'fastify-csrf'
-import undici from 'undici'
+import OAuth from '@fastify/oauth2'
+import Cookie from '@fastify/cookie'
+import Csrf from '@fastify/csrf-protection'
+import { Client } from 'undici'
 
 /**
  * Authentication is a core component of virtually every application.
@@ -22,12 +22,12 @@ async function authorization (fastify, opts) {
   // Undici is an http client for Node.js extremely optimized
   // to achieve the best performances possible. Is very well
   // suited if you need to send all the request to the same endpoint.
-  const client = undici('https://api.github.com')
+  const client = new Client('https://api.github.com')
 
   // `fastify-oauth2` is a plugin that helps you handle oauth2 flows.
   // It comes with preconfigured settings for the major oauth providers.
   // Are you using Auth0? See https://npm.im/fastify-auth0-verify
-  fastify.register(OAuth, {
+  await fastify.register(OAuth, {
     name: 'github',
     credentials: {
       client: {
@@ -43,15 +43,15 @@ async function authorization (fastify, opts) {
   })
 
   // `fastify-cookie` adds everything you need to work with cookies
-  fastify.register(Cookie, {
+  await fastify.register(Cookie, {
     secret: config.COOKIE_SECRET
   })
 
   // When using sessions with cookies, it's always recommended to use CSRF.
   // `fastify-csrf` will help you better protect your application.
   // Don't know what CSRF is? Take a look at https://github.com/pillarjs/understanding-csrf.
-  fastify.register(Csrf, {
-    sessionPlugin: 'fastify-cookie',
+  await fastify.register(Csrf, {
+    sessionPlugin: '@fastify/cookie',
     cookieOpts: { signed: true }
   })
 
@@ -122,7 +122,7 @@ async function authorization (fastify, opts) {
       method: 'GET',
       path: '/user/emails',
       headers: {
-        'User-Agent': 'scurte',
+        'User-Agent': 'fastify-example',
         Authorization: `Bearer ${token}`
       }
     })
