@@ -36,6 +36,6 @@ t.test('Status route', async t => {
 
   // Once we get back che response, we run our assertions
   // to verify that we got back the response that we were expecting.
-  t.strictEqual(response.statusCode, 200)
-  t.deepEqual(response.json(), { status: 'ok', version })
+  t.equal(response.statusCode, 200)
+  t.same(response.json(), { status: 'ok', version })
 })

@@ -19,7 +19,7 @@ t.test('Refresh csrf token', async t => {
 
   // Once we get back che response, we run our assertions
   // to verify that we got back the response that we were expecting.
-  t.strictEqual(response.statusCode, 200)
+  t.equal(response.statusCode, 200)
   // We can't know the value of the csrf token,
   // so we only verify its presence and type.
   t.type(response.json().csrfToken, 'string')
@@ -37,7 +37,7 @@ t.test('User not allowed', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 403)
+  t.equal(response.statusCode, 403)
 })
 
 // Now let's test what happens when a new redirect is added.
@@ -88,8 +88,8 @@ t.test('Add a new redirect (201)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 201)
-  t.deepEqual(response.json(), { created: true })
+  t.equal(response.statusCode, 201)
+  t.same(response.json(), { created: true })
 })
 
 // Now let's test what happens when a new redirect is added,
@@ -134,8 +134,8 @@ t.test('Add a new redirect (409)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 409)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 409)
+  t.same(response.json(), {
     error: 'Conflict',
     message: 'The source already exists',
     statusCode: 409
@@ -170,8 +170,8 @@ t.test('Add a new redirect (400 - bad source)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 400)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 400)
+  t.same(response.json(), {
     error: 'Bad Request',
     message: 'The source cannot contain the private string "_app"',
     statusCode: 400
@@ -203,8 +203,8 @@ t.test('Add a new redirect (400 - bad destination)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 400)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 400)
+  t.same(response.json(), {
     error: 'Bad Request',
     message: 'The destination is not a valid url',
     statusCode: 400
@@ -252,8 +252,8 @@ t.test('Update a redirect (200)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 200)
-  t.deepEqual(response.json(), { updated: true })
+  t.equal(response.statusCode, 200)
+  t.same(response.json(), { updated: true })
 })
 
 t.test('Update a redirect (404)', async t => {
@@ -293,8 +293,8 @@ t.test('Update a redirect (404)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 404)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 404)
+  t.same(response.json(), {
     error: 'Not Found',
     message: 'There is no destination with source foo',
     statusCode: 404
@@ -333,8 +333,8 @@ t.test('Delete a redirect (200)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 200)
-  t.deepEqual(response.json(), { deleted: true })
+  t.equal(response.statusCode, 200)
+  t.same(response.json(), { deleted: true })
 })
 
 t.test('Delete a redirect (404)', async t => {
@@ -372,8 +372,8 @@ t.test('Delete a redirect (404)', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 404)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 404)
+  t.same(response.json(), {
     error: 'Not Found',
     message: 'The source foo does not exists',
     statusCode: 404
@@ -390,7 +390,7 @@ t.test('Get all user defined redirects', async t => {
     method: 'POST',
     path: `/${fastify.indices.SHORTURL}/_search`
   }, params => {
-    t.deepEqual(params.body, {
+    t.same(params.body, {
       from: 0,
       size: 10,
       query: {
@@ -429,8 +429,8 @@ t.test('Get all user defined redirects', async t => {
     }
   })
 
-  t.strictEqual(response.statusCode, 200)
-  t.deepEqual(response.json(), {
+  t.equal(response.statusCode, 200)
+  t.same(response.json(), {
     count: 1,
     redirects: [{
       source: 'foo',
