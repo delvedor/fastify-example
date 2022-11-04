@@ -61,12 +61,12 @@ async function start () {
       ? prodLoggerOptions
       : devLoggerOptions
   })
-  fastify.register(App)
+  await fastify.register(App)
   // You must listen on the port Cloud Run provides
   const port = process.env.PORT || 3000
   // You must listen on all IPV4 addresses in Cloud Run
   const address = IS_GOOGLE_CLOUD_RUN ? '0.0.0.0' : undefined
-  await fastify.listen(port, address)
+  await fastify.listen({ port, address })
 }
 
 start().catch(err => {

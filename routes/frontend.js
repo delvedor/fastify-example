@@ -1,6 +1,6 @@
 import { join } from 'desm'
-import Static from 'fastify-static'
-import Helmet from 'fastify-helmet'
+import Static from '@fastify/static'
+import Helmet from '@fastify/helmet'
 
 export const autoPrefix = '/_app'
 
@@ -17,7 +17,8 @@ export default async function frontend (fastify, opts) {
   // with important security headers. It's not a silver bullet™,
   // but security is an orchestraton of multiple tools that work
   // together to reduce the attack surface of your application.
-  fastify.register(Helmet, {
+  await fastify.register(Helmet, {
+    crossOriginEmbedderPolicy: false,
     // Here we are telling to the browser to only
     // accept content from the following sources.
     contentSecurityPolicy: {
@@ -31,6 +32,7 @@ export default async function frontend (fastify, opts) {
         ],
         fontSrc: [
           "'self'",
+          'data:',
           'https://www.gstatic.com',
           'https://fonts.gstatic.com',
           'https://fonts.googleapis.com'
@@ -54,7 +56,7 @@ export default async function frontend (fastify, opts) {
   // You are welcome to serve static files from Fastify
   // with the `fastify-static` plugin, but in the real-world™
   // you should definitely use a CDN!
-  fastify.register(Static, {
+  await fastify.register(Static, {
     root: join(import.meta.url, '..', 'public'),
     prefix: '/public' // since we are using `autoPrefix`, the final path will be `/_app/public`
   })

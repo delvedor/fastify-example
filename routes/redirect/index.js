@@ -28,11 +28,11 @@ export default async function short (fastify, opts) {
   // Handling worker threads is not trivial, so we will use an amazing
   // library, Piscina! (https://github.com/piscinajs/piscina)
   // Piscina can be integrated with Fastify via the `fastify-piscina` plugin.
-  fastify.register(Piscina, {
+  await fastify.register(Piscina, {
     filename: join(import.meta.url, 'worker.cjs')
   })
 
-  fastify.register(UpdateCount)
+  await fastify.register(UpdateCount)
 
   // Let's add two decorators that we'll need only here
   // to handle the html response generation.
@@ -53,17 +53,15 @@ export default async function short (fastify, opts) {
       return reply.redirect('https://github.com/delvedor/fastify-example')
     }
 
-    const { body: result } = await elastic.search({
+    const result = await elastic.search({
       index: indices.SHORTURL,
-      body: {
-        query: {
-          // match runs a full-text query
-          match: {
-            source: {
-              query: source,
-              // fuzziness will help us detect typos
-              fuzziness: 'AUTO'
-            }
+      query: {
+        // match runs a full-text query
+        match: {
+          source: {
+            query: source,
+            // fuzziness will help us detect typos
+            fuzziness: 'AUTO'
           }
         }
       }

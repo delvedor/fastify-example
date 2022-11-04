@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import RateLimit from 'fastify-rate-limit'
+import RateLimit from '@fastify/rate-limit'
 
 /**
  * When exposing an application to the public internet, it's a good
@@ -36,34 +36,30 @@ async function rateLimit (fastify, opts) {
         index: indices.RATELIMIT,
         id: ip,
         _source: true,
-        body: {
-          // increase the `current` field
-          script: {
-            lang: 'painless',
-            source: 'ctx._source.current += 1'
-          },
-          // create the document if it does not exists
-          upsert: {
-            current: 1,
-            ttl: Date.now() + timeWindow
-          }
+        // increase the `current` field
+        script: {
+          lang: 'painless',
+          source: 'ctx._source.current += 1'
+        },
+        // create the document if it does not exists
+        upsert: {
+          current: 1,
+          ttl: Date.now() + timeWindow
         }
       }, onIncrement)
 
       function onIncrement (err, result) {
         if (err) return callback(err)
-        const { current, ttl } = result.body.get._source
+        const { current, ttl } = result.get._source
         if (ttl < Date.now()) {
           elastic.update({
             index: indices.RATELIMIT,
             id: ip,
             _source: true,
-            body: {
-              // update the entire document
-              doc: {
-                current: 1,
-                ttl: Date.now() + timeWindow
-              }
+            // update the entire document
+            doc: {
+              current: 1,
+              ttl: Date.now() + timeWindow
             }
           }, onIncrement)
         } else {
@@ -97,7 +93,7 @@ async function rateLimit (fastify, opts) {
 
   // Finally register the rate limit plugin
   // and add the needd configuration.
-  fastify.register(RateLimit, {
+  await fastify.register(RateLimit, {
     allowList: ['127.0.0.1'], // no rate limit in our machine
     store: ElasticsearchStore,
     timeWindow: '1 minute',

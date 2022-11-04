@@ -121,7 +121,7 @@ export default async function admin (fastify, opts) {
       id: source,
       // refresh? https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html
       refresh: 'wait_for',
-      body: {
+      document: {
         source,
         destination,
         isPrivate,
@@ -135,7 +135,10 @@ export default async function admin (fastify, opts) {
       // ignore is a cool option of the Elasticsearch client,
       // it tell to the client not to throw in case of the specified
       // error, so you can handle it easily without the need of a try catch block.
-      ignore: [409]
+      ignore: [409],
+      // returns additional response metadata,
+      // see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-connecting.html#client-usage
+      meta: true
     })
 
     if (statusCode === 409) {
@@ -181,10 +184,8 @@ export default async function admin (fastify, opts) {
       index: indices.SHORTURL,
       id: source,
       refresh: 'wait_for',
-      body: {
-        doc: { source, destination, isPrivate }
-      }
-    }, { ignore: [404] })
+      doc: { source, destination, isPrivate }
+    }, { ignore: [404], meta: true })
 
     if (statusCode === 404) {
       throw httpErrors.notFound(`There is no destination with source ${source}`)
@@ -218,7 +219,7 @@ export default async function admin (fastify, opts) {
       index: indices.SHORTURL,
       id: source,
       refresh: 'wait_for'
-    }, { ignore: [404] })
+    }, { ignore: [404], meta: true })
 
     if (statusCode === 404) {
       throw httpErrors.notFound(`The source ${source} does not exists`)
@@ -261,19 +262,17 @@ export default async function admin (fastify, opts) {
 
   async function onGetRedirects (req, reply) {
     const { from, size } = req.query
-    const { body: result } = await elastic.search({
+    const result = await elastic.search({
       index: indices.SHORTURL,
-      body: {
-        from,
-        size,
-        query: {
-          term: { user: req.user.mail }
-        },
-        // source is defined a text, which cannot be sorted by Elasticsearch.
-        // To solve this we used the multi-fields feaure:
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
-        sort: 'source.raw'
-      }
+      from,
+      size,
+      query: {
+        term: { user: req.user.mail }
+      },
+      // source is defined a text, which cannot be sorted by Elasticsearch.
+      // To solve this we used the multi-fields feaure:
+      // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
+      sort: 'source.raw'
     })
 
     return {

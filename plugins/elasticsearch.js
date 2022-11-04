@@ -31,6 +31,9 @@ async function elasticsearch (fastify, opts) {
     ...(ELASTIC_CLOUD_ID && { cloud: { id: ELASTIC_CLOUD_ID } }),
     ...(ELASTIC_ADDRESS && { node: ELASTIC_ADDRESS }),
     auth: { apiKey: ELASTIC_API_KEY },
+    tls: {
+      rejectUnauthorized: !ELASTIC_ADDRESS.includes('localhost:9200')
+    },
     ...(opts.elasticMock && { Connection: opts.elasticMock.getConnection() })
   })
 
@@ -73,7 +76,12 @@ async function elasticsearch (fastify, opts) {
   // on other onClose will be executed first,
   // avoiding annoying ordering issues.
   fastify.addHook('onClose', (instance, done) => {
-    instance.elastic.close(done)
+    // the elasticsearch mock library has a bug in the close api
+    if (!opts.testing) {
+      instance.elastic.close(done)
+    } else {
+      done()
+    }
   })
 }
 
@@ -84,50 +92,46 @@ async function elasticsearch (fastify, opts) {
  */
 async function configureIndices (client, indices) {
   let result = await client.indices.exists({ index: indices.SHORTURL })
-  if (!result.body) {
+  if (!result) {
     await client.indices.create({
       index: indices.SHORTURL,
-      body: {
-        mappings: {
-          properties: {
-            // the short url
-            source: {
-              type: 'text',
-              // source is defined a text, which cannot be sorted by Elasticsearch.
-              // To solve this we used the multi-fields feaure:
-              // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
-              fields: {
-                raw: { type: 'keyword' }
-              }
-            },
-            // the destination of the short url
-            destination: { type: 'text' },
-            // should the source appear in the 404 suggestions?
-            isPrivate: { type: 'boolean' },
-            // how many times a shot url has been used
-            count: { type: 'integer' },
-            // who has created the short url
-            user: { type: 'keyword' },
-            // creation timestamp
-            created: { type: 'date' }
-          }
+      mappings: {
+        properties: {
+          // the short url
+          source: {
+            type: 'text',
+            // source is defined a text, which cannot be sorted by Elasticsearch.
+            // To solve this we used the multi-fields feaure:
+            // https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html
+            fields: {
+              raw: { type: 'keyword' }
+            }
+          },
+          // the destination of the short url
+          destination: { type: 'text' },
+          // should the source appear in the 404 suggestions?
+          isPrivate: { type: 'boolean' },
+          // how many times a shot url has been used
+          count: { type: 'integer' },
+          // who has created the short url
+          user: { type: 'keyword' },
+          // creation timestamp
+          created: { type: 'date' }
         }
       }
     })
   }
 
   result = await client.indices.exists({ index: indices.RATELIMIT })
-  if (!result.body) {
+  if (!result) {
     await client.indices.create({
       index: indices.RATELIMIT,
-      body: {
-        mappings: {
-          properties: {
-            // request count
-            current: { type: 'integer' },
-            // time to live of the request count
-            ttl: { type: 'date' }
-          }
+      mappings: {
+        properties: {
+          // request count
+          current: { type: 'integer' },
+          // time to live of the request count
+          ttl: { type: 'date' }
         }
       }
     })
