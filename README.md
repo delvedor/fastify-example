@@ -127,12 +127,12 @@ Now you can either run the project locally or deploy it.
 
 ### Locally
 
-1. Use Node.js v14.
+1. Use Node.js v18.
 
     ```sh
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-    nvm install 14
-    node -v # should be v14.minor.patch
+    nvm install 18
+    node -v # should be v18.minor.patch
     ```
 
 2. Install the project dependencies:
