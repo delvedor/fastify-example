@@ -84,7 +84,7 @@ export default async function frontend (fastify, opts) {
       // The cookie should be sent only to this domain
       sameSite: true,
       // The cookie should be sent only for the path starting with `/_app`
-      path: '/_app',
+      path: autoPrefix,
       // The cookie should be signed (handled by `fastify-cookie`)
       signed: true,
       maxAge: 604800, // one week in seconds
