@@ -72,7 +72,7 @@ export default async function frontend (fastify, opts) {
   async function onLoginCallback (req, reply) {
     // In every route and hook, the `this` is the
     // current Fastify instance!
-    const token = await this.github.getAccessTokenFromAuthorizationCodeFlow(req)
+    const { token } = await this.github.getAccessTokenFromAuthorizationCodeFlow(req)
     await this.isUserAllowed(token.access_token)
 
     // Keep always security in mind!
